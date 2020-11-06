@@ -100,8 +100,8 @@ bool ModuleRender::Blit(SDL_Texture* texture, int x, int y, SDL_Rect* section, f
 
 	if(pivot_x != INT_MAX && pivot_y != INT_MAX)
 	{
-		pivot.x = pivot_x;
-		pivot.y = pivot_y;
+		pivot.x = pivot_x * SCREEN_SIZE;
+		pivot.y = pivot_y * SCREEN_SIZE;
 		p = &pivot;
 	}
 

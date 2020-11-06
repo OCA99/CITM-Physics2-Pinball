@@ -1,6 +1,7 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
+#include "p2Point.h"
 #include "Box2D/Box2D/Box2D.h"
 
 #define GRAVITY_X 0.0f
@@ -42,6 +43,9 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 
+	PhysBody* CreateRightFlipper(p2Point<int>& pivot);
+	PhysBody* CreateLeftFlipper(p2Point<int>& pivot);
+
 	PhysBody* CreateCircle(int x, int y, int radius);
 	PhysBody* CreateRectangle(int x, int y, int width, int height);
 	PhysBody* CreateRectangleSensor(int x, int y, int width, int height);
@@ -52,7 +56,7 @@ public:
 
 private:
 
-	bool debug;
+	bool debug = false;
 	b2World* world;
 	b2MouseJoint* mouse_joint;
 	b2Body* ground;

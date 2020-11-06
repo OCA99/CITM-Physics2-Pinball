@@ -3,7 +3,6 @@
 #include "ModuleInput.h"
 #include "ModuleRender.h"
 #include "ModulePhysics.h"
-#include "p2Point.h"
 #include "math.h"
 
 #ifdef _DEBUG
@@ -16,7 +15,7 @@ ModulePhysics::ModulePhysics(Application* app, bool start_enabled) : Module(app,
 {
 	world = NULL;
 	mouse_joint = NULL;
-	debug = true;
+	debug = false;
 }
 
 // Destructor
@@ -350,4 +349,29 @@ void ModulePhysics::BeginContact(b2Contact* contact)
 
 	if(physB && physB->listener != NULL)
 		physB->listener->OnCollision(physB, physA);
+}
+
+PhysBody* ModulePhysics::CreateRightFlipper(p2Point<int>& pivot) {
+	int coords[2] = {
+		0, 0
+	};
+
+	PhysBody* shape = CreateChain(104, 258, coords, 2);
+
+	return shape;
+}
+
+PhysBody* ModulePhysics::CreateLeftFlipper(p2Point<int>& pivot) {
+	int coords[12] = {
+		54, 253,
+		66, 255,
+		74, 257,
+		68, 259,
+		58, 261,
+		52, 260
+	};
+
+	PhysBody* shape = CreateChain(pivot.x, pivot.y, coords, 12);
+
+	return shape;
 }
