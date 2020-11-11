@@ -47,8 +47,8 @@ update_status ModulePlayer::Update()
 
 update_status ModulePlayer::PostUpdate()
 {
-	//App->renderer->Blit(texture, leftFlipperPosition.x, leftFlipperPosition.y, &leftFlipperRect, 0.0f, 0.0f, leftFlipperPivot.x, leftFlipperPivot.y);
-	//App->renderer->Blit(texture, rightFlipperPosition.x, rightFlipperPosition.y, &rightFlipperRect, 0.0f, 0.0f, rightFlipperPivot.x, rightFlipperPivot.y);
+	App->renderer->Blit(texture, leftFlipperPosition.x, leftFlipperPosition.y, &leftFlipperRect, 0.0f, 0.0f, leftFlipperPivot.x, leftFlipperPivot.y);
+	App->renderer->Blit(texture, rightFlipperPosition.x, rightFlipperPosition.y, &rightFlipperRect, 0.0f, 0.0f, rightFlipperPivot.x, rightFlipperPivot.y);
 
 	return UPDATE_CONTINUE;
 }
