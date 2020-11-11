@@ -28,12 +28,12 @@ Application::Application()
 
 	// Main Modules
 	AddModule(window);
-	AddModule(physics);
 	AddModule(textures);
 	AddModule(input);
 	AddModule(audio);
 	AddModule(scene_intro);
 	AddModule(player);
+	AddModule(physics);
 	AddModule(renderer);
 }
 

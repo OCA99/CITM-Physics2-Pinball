@@ -16,6 +16,9 @@ ModulePhysics::ModulePhysics(Application* app, bool start_enabled) : Module(app,
 	world = NULL;
 	mouse_joint = NULL;
 	debug = false;
+
+	world = new b2World(b2Vec2(GRAVITY_X, -GRAVITY_Y));
+	world->SetContactListener(this);
 }
 
 // Destructor
@@ -26,9 +29,6 @@ ModulePhysics::~ModulePhysics()
 bool ModulePhysics::Start()
 {
 	LOG("Creating Physics 2D environment");
-
-	world = new b2World(b2Vec2(GRAVITY_X, -GRAVITY_Y));
-	world->SetContactListener(this);
 
 	// needed to create joints like mouse joint
 	b2BodyDef bd;
@@ -145,8 +145,8 @@ PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size)
 
 	for(uint i = 0; i < size / 2; ++i)
 	{
-		p[i].x = PIXEL_TO_METERS(points[i * 2 + 0]);
-		p[i].y = PIXEL_TO_METERS(points[i * 2 + 1]);
+		p[i].x = PIXEL_TO_METERS(points[i * 2 + 0]) - PIXEL_TO_METERS(x);
+		p[i].y = PIXEL_TO_METERS(points[i * 2 + 1]) - PIXEL_TO_METERS(y);
 	}
 
 	shape.CreateLoop(p, size / 2);
@@ -222,8 +222,12 @@ update_status ModulePhysics::PostUpdate()
 					for(int32 i = 0; i < shape->m_count; ++i)
 					{
 						v = b->GetWorldPoint(shape->m_vertices[i]);
-						if(i > 0)
-							App->renderer->DrawLine(METERS_TO_PIXELS(prev.x), METERS_TO_PIXELS(prev.y), METERS_TO_PIXELS(v.x), METERS_TO_PIXELS(v.y), 100, 255, 100);
+						if (i > 0)
+						{
+							int prevx = METERS_TO_PIXELS(prev.x);
+							int prevy = METERS_TO_PIXELS(prev.y);
+							App->renderer->DrawLine(prevx, prevy, METERS_TO_PIXELS(v.x), METERS_TO_PIXELS(v.y), 0, 255, 0, 255);
+						}
 						prev = v;
 					}
 
@@ -352,11 +356,14 @@ void ModulePhysics::BeginContact(b2Contact* contact)
 }
 
 PhysBody* ModulePhysics::CreateRightFlipper(p2Point<int>& pivot) {
-	int coords[2] = {
-		0, 0
+	int coords[8] = {
+		0, 0,
+		1, 0,
+		2, 0,
+		2, 1
 	};
 
-	PhysBody* shape = CreateChain(104, 258, coords, 2);
+	PhysBody* shape = CreateChain(104, 258, coords, 8);
 
 	return shape;
 }
@@ -372,6 +379,7 @@ PhysBody* ModulePhysics::CreateLeftFlipper(p2Point<int>& pivot) {
 	};
 
 	PhysBody* shape = CreateChain(pivot.x, pivot.y, coords, 12);
+	shape->body->SetGravityScale(0.0f);
 
 	return shape;
 }
