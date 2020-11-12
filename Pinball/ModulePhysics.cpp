@@ -356,19 +356,84 @@ void ModulePhysics::BeginContact(b2Contact* contact)
 }
 
 PhysBody* ModulePhysics::CreateRightFlipper(p2Point<int>& pivot) {
-	int coords[8] = {
-		0, 0,
-		1, 0,
-		2, 0,
-		2, 1
+	b2BodyDef triggerBodyDef;
+	triggerBodyDef.type = b2_dynamicBody;
+	triggerBodyDef.position.Set(PIXEL_TO_METERS(0), PIXEL_TO_METERS(0));
+
+	b2Body* triggerBody = world->CreateBody(&triggerBodyDef);
+
+	b2PolygonShape triggerShape;
+
+	int coords[12] = {
+		107, 260,
+		107, 253,
+		96, 255,
+		85, 257,
+		94, 259,
+		103, 261
 	};
 
-	PhysBody* shape = CreateChain(104, 258, coords, 8);
+	b2Vec2 rightTriggerVec[6];
+	for (int i = 0; i < 6; i++)
+	{
+		rightTriggerVec[i].x = PIXEL_TO_METERS(coords[i * 2]);
+		rightTriggerVec[i].y = PIXEL_TO_METERS(coords[i * 2 + 1]);
+	}
 
-	return shape;
+	triggerShape.Set(rightTriggerVec, 6);
+
+	b2FixtureDef triggerFixtureDef;
+	triggerFixtureDef.shape = &triggerShape;
+	triggerFixtureDef.density = 1;
+	//triggerFixtureDef.filter.groupIndex = groupIndex::RIGID_PINBALL;
+	triggerBody->CreateFixture(&triggerFixtureDef);
+
+	b2Vec2 centerRectangle = triggerBody->GetWorldCenter();
+	centerRectangle += (b2Vec2(PIXEL_TO_METERS(5), PIXEL_TO_METERS(0)));
+
+	b2BodyDef pivotBodyDef;
+	pivotBodyDef.type = b2_staticBody;
+	pivotBodyDef.position.Set(centerRectangle.x, centerRectangle.y);
+
+	b2Body* pivotBody = world->CreateBody(&pivotBodyDef);
+
+	b2CircleShape pivotCircle;
+	pivotCircle.m_radius = PIXEL_TO_METERS(0.5f);
+	b2FixtureDef pivotFixtureDef;
+	pivotFixtureDef.shape = &pivotCircle;
+	//pivotFixtureDef.filter.groupIndex = groupIndex::RIGID_PINBALL;
+	pivotBody->CreateFixture(&pivotFixtureDef);
+
+	b2RevoluteJointDef revJointDef;
+	revJointDef.Initialize(triggerBody, pivotBody, centerRectangle);
+	revJointDef.upperAngle = 0.5f;
+	revJointDef.lowerAngle = -0.5f;
+	revJointDef.enableLimit = true;
+	revJointDef.maxMotorTorque = 15.0f;
+	revJointDef.motorSpeed = 0.0f;
+	revJointDef.enableMotor = true;
+	b2Joint* joint = world->CreateJoint(&revJointDef);
+
+	PhysBody* rightTrigger = new PhysBody();
+	rightTrigger->body = triggerBody;
+	rightTrigger->body2 = pivotBody;
+	rightTrigger->joint = joint;
+	triggerBody->SetUserData(rightTrigger);
+
+	return rightTrigger;
 }
 
 PhysBody* ModulePhysics::CreateLeftFlipper(p2Point<int>& pivot) {
+
+
+	b2BodyDef triggerBodyDef;
+	triggerBodyDef.type = b2_dynamicBody;
+	triggerBodyDef.position.Set(PIXEL_TO_METERS(0), PIXEL_TO_METERS(0));
+
+	b2Body* triggerBody = world->CreateBody(&triggerBodyDef);
+
+	b2PolygonShape triggerShape;
+
 	int coords[12] = {
 		54, 253,
 		66, 255,
@@ -378,8 +443,52 @@ PhysBody* ModulePhysics::CreateLeftFlipper(p2Point<int>& pivot) {
 		52, 260
 	};
 
-	PhysBody* shape = CreateChain(pivot.x, pivot.y, coords, 12);
-	shape->body->SetGravityScale(0.0f);
+	b2Vec2 leftTriggerVec[6];
+	for (int i = 0; i < 6; i++)
+	{
+		leftTriggerVec[i].x = PIXEL_TO_METERS(coords[i * 2]);
+		leftTriggerVec[i].y = PIXEL_TO_METERS(coords[i * 2 + 1]);
+	}
 
-	return shape;
+	triggerShape.Set(leftTriggerVec, 6);
+
+	b2FixtureDef triggerFixtureDef;
+	triggerFixtureDef.shape = &triggerShape;
+	triggerFixtureDef.density = 1;
+	//triggerFixtureDef.filter.groupIndex = groupIndex::RIGID_PINBALL;
+	triggerBody->CreateFixture(&triggerFixtureDef);
+
+	b2Vec2 centerRectangle = triggerBody->GetWorldCenter();
+	centerRectangle += (b2Vec2(PIXEL_TO_METERS(-5), 0));
+
+	b2BodyDef pivotBodyDef;
+	pivotBodyDef.type = b2_staticBody;
+	pivotBodyDef.position.Set(centerRectangle.x, centerRectangle.y);
+
+	b2Body* pivotBody = world->CreateBody(&pivotBodyDef);
+
+	b2CircleShape pivotCircle;
+	pivotCircle.m_radius = PIXEL_TO_METERS(0.5f);
+	b2FixtureDef pivotFixtureDef;
+	pivotFixtureDef.shape = &pivotCircle;
+	//pivotFixtureDef.filter.groupIndex = groupIndex::RIGID_PINBALL;
+	pivotBody->CreateFixture(&pivotFixtureDef);
+
+	b2RevoluteJointDef revJointDef;
+	revJointDef.Initialize(triggerBody, pivotBody, centerRectangle);
+	revJointDef.upperAngle = 0.5f;
+	revJointDef.lowerAngle = -0.5f;
+	revJointDef.enableLimit = true;
+	revJointDef.maxMotorTorque = 15.0f;
+	revJointDef.motorSpeed = 0.0f;
+	revJointDef.enableMotor = true;
+	b2Joint* joint = world->CreateJoint(&revJointDef);
+
+	PhysBody* leftTrigger = new PhysBody();
+	leftTrigger->body = triggerBody;
+	leftTrigger->body2 = pivotBody;
+	leftTrigger->joint = joint;
+	triggerBody->SetUserData(leftTrigger);
+
+	return leftTrigger;
 }

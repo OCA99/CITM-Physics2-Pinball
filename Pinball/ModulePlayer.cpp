@@ -42,10 +42,15 @@ bool ModulePlayer::CleanUp()
 
 update_status ModulePlayer::PreUpdate()
 {
-	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN)
-	{
-		leftFlipperBody->body->ApplyTorque(-65.0f, true);
-	}
+	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+		leftFlipperBody->body->ApplyTorque(-20.0f, true);
+	else
+		leftFlipperBody->body->ApplyTorque(15.0f, true);
+
+	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+		rightFlipperBody->body->ApplyTorque(20.0f, true);
+	else
+		rightFlipperBody->body->ApplyTorque(-15.0f, true);
 
 	return UPDATE_CONTINUE;
 }
@@ -58,8 +63,8 @@ update_status ModulePlayer::Update()
 
 update_status ModulePlayer::PostUpdate()
 {
-	App->renderer->Blit(texture, leftFlipperPosition.x, leftFlipperPosition.y, &leftFlipperRect, 0.0f, leftFlipperBody->body->GetAngle(), leftFlipperPivot.x, leftFlipperPivot.y);
-	App->renderer->Blit(texture, rightFlipperPosition.x, rightFlipperPosition.y, &rightFlipperRect, 0.0f, rightFlipperBody->body->GetAngle(), rightFlipperPivot.x, rightFlipperPivot.y);
+	App->renderer->Blit(texture, leftFlipperPosition.x, leftFlipperPosition.y, &leftFlipperRect, 0.0f, leftFlipperBody->GetRotation(), leftFlipperPivot.x, leftFlipperPivot.y);
+	App->renderer->Blit(texture, rightFlipperPosition.x, rightFlipperPosition.y, &rightFlipperRect, 0.0f, rightFlipperBody->GetRotation(), rightFlipperPivot.x, rightFlipperPivot.y);
 
 	return UPDATE_CONTINUE;
 }

@@ -13,14 +13,40 @@
 #define METERS_TO_PIXELS(m) ((int) floor(PIXELS_PER_METER * m))
 #define PIXEL_TO_METERS(p)  ((float) METER_PER_PIXEL * p)
 
-// Small class to return to other modules to track position and rotation of physics bodies
+enum BODY_INDEX
+{
+	BALL,
+	WALL,
+	TRIGGER,
+	BUMPER,
+	PLUNGE,
+
+	NOT_DEFINED
+};
+enum PHYSIC_BODY_TYPE
+{
+	_BALL,
+	_WALL,
+	_TRIGGER,
+	_BUMPER,
+	_PLUNGE,
+	_DEAD_SENSOR,
+	_REBOUNCER1,
+	_REBOUNCER2,
+	_REBOUNCER3,
+
+	_LEVEL_CHANGE,
+
+	_NOT_DEFINED
+};
+
 class PhysBody
 {
 public:
 	PhysBody() : listener(NULL), body(NULL)
 	{}
 
-	void GetPosition(int& x, int &y) const;
+	void GetPosition(int& x, int& y) const;
 	float GetRotation() const;
 	bool Contains(int x, int y) const;
 	int RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& normal_y) const;
@@ -28,7 +54,11 @@ public:
 public:
 	int width, height;
 	b2Body* body;
+	b2Body* body2;
+	b2Joint* joint;
 	Module* listener;
+
+	PHYSIC_BODY_TYPE bodyType = _NOT_DEFINED;
 };
 
 // Module --------------------------------------
