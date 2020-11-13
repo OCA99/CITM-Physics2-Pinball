@@ -14,11 +14,29 @@ public:
 	SDL_Texture* background;
 	SDL_Rect backRect;
 
+	//physbodies
+
+	PhysBody* outerWallB;
+	PhysBody* upperMoonB;
+	PhysBody* leftLB;
+	PhysBody* rightLB;
+	PhysBody* rightMediumWallB;
+	PhysBody* rightBarB;
+	PhysBody* diggletRB;
+	PhysBody* diggletLB;
+	PhysBody* leftSmallWallB;
+	PhysBody* rightTinyWallB;
+	PhysBody* leftTinyWallB;
+	PhysBody* starWallB;
+	PhysBody* rightTriangleB;
+	PhysBody* leftTriangleB;
+
 	bool Start();
 	update_status Update();
 	update_status PostUpdate();
 	bool CleanUp();
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
+	void CreateWalls();
 
 public:
 
