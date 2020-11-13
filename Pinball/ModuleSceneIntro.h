@@ -15,6 +15,7 @@ public:
 	SDL_Texture* ballTexture;
 
 	SDL_Rect backRect;
+	SDL_Rect ballRect;
 
 	//physbodies
 

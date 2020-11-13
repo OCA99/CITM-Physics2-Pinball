@@ -25,6 +25,9 @@ bool ModuleSceneIntro::Start()
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
 	background = App->textures->Load("pinball/level.png");
+	ballTexture = App->textures->Load("pinball/sprites.png");
+
+	ballRect = SDL_Rect({172, 17, 16, 16 });
 	CreateWalls();
 	
 
@@ -57,6 +60,17 @@ update_status ModuleSceneIntro::PostUpdate()
 {
 	App->renderer->Blit(background, 0, 0);
 
+	//Render each ball Texture
+	p2List_item<PhysBody*>* ball_single = balls.getFirst();
+	while (ball_single != NULL)
+	{
+		int x, y;
+		ball_single->data->GetPosition(x, y);
+
+		App->renderer->Blit(ballTexture, x, y,&ballRect);
+
+		ball_single = ball_single->next;
+	}
 
 	return UPDATE_CONTINUE;
 }
