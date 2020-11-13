@@ -123,26 +123,25 @@ void ModuleSceneIntro::CreateWalls() {
 
 	int upperMoon[40] = {
 	39, 42,
-	47, 37,
-	56, 33,
-	66, 29,
-	72, 28,
-	90, 28,
-	96, 29,
-	103, 31,
-	109, 34,
-	116, 38,
-	110, 32,
-	103, 28,
+	46, 39,
+	56, 35,
+	67, 32,
+	81, 31,
+	91, 31,
+	98, 33,
+	105, 35,
+	111, 37,
+	116, 39,
+	111, 33,
+	105, 29,
 	97, 25,
-	86, 22,
-	76, 22,
-	69, 23,
-	63, 25,
+	89, 23,
+	80, 22,
+	69, 24,
+	61, 26,
 	55, 29,
 	49, 33,
 	43, 37,
-	
 	};
 
 	upperMoonB = App->physics->CreateStaticChain(0, 0, upperMoon, 40);
@@ -186,7 +185,7 @@ void ModuleSceneIntro::CreateWalls() {
 	129, 137,
 	126, 144,
 	122, 149,
-	116, 143,
+	116, 142,
 	123, 133,
 	127, 123,
 	130, 111,
@@ -198,20 +197,20 @@ void ModuleSceneIntro::CreateWalls() {
 	117, 85,
 	117, 92,
 	116, 95,
-	116, 108,
+	116, 103,
 	115, 112,
 	113, 115,
-	110, 121,
-	108, 121,
-	105, 119,
-	105, 112,
-	106, 106,
-	107, 99,
-	108, 92,
-	109, 84,
-	110, 79,
+	111, 119,
+	107, 120,
+	106, 117,
+	106, 112,
+	107, 107,
+	108, 100,
+	109, 94,
+	110, 85,
+	110, 78,
 	110, 49,
-	112, 49,
+	114, 51,
 	117, 53,
 	122, 58,
 	127, 63,
@@ -354,26 +353,25 @@ void ModuleSceneIntro::CreateWalls() {
 	starWallB = App->physics->CreateStaticChain(0, 0, starWall, 30);
 
 	int leftTriangle[12] = {
-	35, 226,
 	35, 209,
-	39, 209,
-	50, 232,
-	50, 236,
-	47, 236,
+	35, 225,
+	38, 230,
+	48, 237,
+	49, 233,
+	37, 209
 	};
 
 	leftTriangleB = App->physics->CreateStaticChain(0, 0, leftTriangle, 12);
 
-	int rightTriangle[12] = {
-	125, 228,
-	125, 209,
-	121, 209,
-	110, 233,
-	110, 236,
-	113, 236,
+	int rightTriangle[10] = {
+	 110, 233,
+	122, 209,
+	125, 210,
+	125, 227,
+	111, 237
 	};
 
-	rightTriangleB = App->physics->CreateStaticChain(0, 0, rightTriangle, 12);
+	rightTriangleB = App->physics->CreateStaticChain(0, 0, rightTriangle, 10);
 
 
 }
