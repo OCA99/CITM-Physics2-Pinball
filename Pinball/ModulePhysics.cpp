@@ -526,3 +526,32 @@ PhysBody* ModulePhysics::CreateLeftFlipper(p2Point<int>& pivot) {
 
 	return leftTrigger;
 }
+PhysBody* ModulePhysics::CreateBall(int x, int y, int radius)
+{
+	b2BodyDef body;
+	body.type = b2_dynamicBody;
+	body.position.Set(PIXEL_TO_METERS(x * SCREEN_SIZE) , PIXEL_TO_METERS(y * SCREEN_SIZE) );
+	body.bullet = true;
+
+	b2Body* b = world->CreateBody(&body);
+
+	b2CircleShape shape;
+	shape.m_radius = PIXEL_TO_METERS(radius);
+	b2FixtureDef fixture;
+	fixture.shape = &shape;
+	fixture.density = 1.0f;
+	fixture.friction = 0.0f;
+	fixture.restitution = 0.3f;
+	fixture.filter.groupIndex = BODY_INDEX::BALL;
+
+	b->CreateFixture(&fixture);
+
+	PhysBody* pbody = new PhysBody();
+	pbody->body = b;
+	b->SetUserData(pbody);
+	pbody->width = pbody->height = radius;
+	pbody->bodyType = _BALL;
+
+	return pbody;
+
+}

@@ -12,6 +12,8 @@ public:
 	ModuleSceneIntro(Application* app, bool start_enabled = true);
 	~ModuleSceneIntro();
 	SDL_Texture* background;
+	SDL_Texture* ballTexture;
+
 	SDL_Rect backRect;
 
 	//physbodies
@@ -31,12 +33,15 @@ public:
 	PhysBody* rightTriangleB;
 	PhysBody* leftTriangleB;
 
+	p2List<PhysBody*> balls;
+
 	bool Start();
 	update_status Update();
 	update_status PostUpdate();
 	bool CleanUp();
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 	void CreateWalls();
+	void CreateBallInMousePos();
 
 public:
 

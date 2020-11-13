@@ -42,6 +42,10 @@ bool ModuleSceneIntro::CleanUp()
 // Update: draw background
 update_status ModuleSceneIntro::Update()
 {
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+	{
+		CreateBallInMousePos();
+	}
 	return UPDATE_CONTINUE;
 }
 
@@ -52,6 +56,8 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB) {
 update_status ModuleSceneIntro::PostUpdate()
 {
 	App->renderer->Blit(background, 0, 0);
+
+
 	return UPDATE_CONTINUE;
 }
 
@@ -375,4 +381,14 @@ void ModuleSceneIntro::CreateWalls() {
 
 
 }
+void ModuleSceneIntro::CreateBallInMousePos()
+{
+	int x, y;
+	int radius = 9;
 
+	x = App->input->GetMouseX();
+	y = App->input->GetMouseY();
+
+	balls.add(App->physics->CreateBall(x , y, radius));
+	balls.getLast()->data->listener = this;
+}
