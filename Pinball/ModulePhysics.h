@@ -53,6 +53,7 @@ public:
 	PhysBody* CreateChain(int x, int y, int* points, int size);
 	PhysBody* CreateStaticChain(int x, int y, int* points, int size);
 	PhysBody* CreateBall(int x, int y, float radius);
+	PhysBody* CreatePlunge();
 
 	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);

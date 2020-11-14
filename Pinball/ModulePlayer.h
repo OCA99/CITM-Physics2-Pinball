@@ -20,8 +20,10 @@ public:
 private:
 	PhysBody* leftFlipperBody;
 	PhysBody* rightFlipperBody;
+	PhysBody* plunge;
 	SDL_Rect leftFlipperRect;
 	SDL_Rect rightFlipperRect;
+
 
 	SDL_Texture* texture;
 

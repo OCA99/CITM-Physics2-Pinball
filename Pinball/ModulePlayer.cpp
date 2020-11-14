@@ -29,6 +29,8 @@ bool ModulePlayer::Start()
 	leftFlipperBody = App->physics->CreateLeftFlipper(leftFlipperPivot);
 	rightFlipperBody = App->physics->CreateRightFlipper(rightFlipperPivot);
 
+	plunge = App->physics->CreatePlunge();
+
 	return true;
 }
 
@@ -51,6 +53,10 @@ update_status ModulePlayer::PreUpdate()
 		rightFlipperBody->body->ApplyTorque(20.0f, true);
 	else
 		rightFlipperBody->body->ApplyTorque(-15.0f, true);
+
+	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+		plunge->body->ApplyForceToCenter(b2Vec2(0, 250), true);
+
 
 	return UPDATE_CONTINUE;
 }
