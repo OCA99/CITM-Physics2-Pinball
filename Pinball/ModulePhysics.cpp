@@ -535,7 +535,7 @@ PhysBody* ModulePhysics::CreateBall(int x, int y, float radius)
 {
 	b2BodyDef body;
 	body.type = b2_dynamicBody;
-	body.position.Set(PIXEL_TO_METERS(x) , PIXEL_TO_METERS(y) );
+	body.position.Set(PIXEL_TO_METERS(x) , PIXEL_TO_METERS(y));
 	body.bullet = true;
 
 	b2Body* b = world->CreateBody(&body);
@@ -546,7 +546,7 @@ PhysBody* ModulePhysics::CreateBall(int x, int y, float radius)
 	fixture.shape = &shape;
 	fixture.density = 5.5f;
 	fixture.friction = 0.0f;
-	fixture.restitution = 0.3f;
+	fixture.restitution = 0.0f;
 	fixture.filter.categoryBits = 0x0002;
 
 	b->CreateFixture(&fixture);

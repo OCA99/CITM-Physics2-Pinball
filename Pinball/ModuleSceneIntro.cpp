@@ -49,6 +49,19 @@ update_status ModuleSceneIntro::Update()
 	{
 		CreateBallInMousePos();
 	}
+
+	p2List_item<PhysBody*>* ball_single = balls.getFirst();
+	while (ball_single != NULL)
+	{
+		b2Vec2 vel = ball_single->data->body->GetLinearVelocity();
+		float speed = vel.Normalize();
+		if (speed > maxSpeed) {
+			ball_single->data->body->SetLinearVelocity(maxSpeed * vel);
+		}
+
+		ball_single = ball_single->next;
+	}
+
 	return UPDATE_CONTINUE;
 }
 
@@ -287,6 +300,7 @@ void ModuleSceneIntro::CreateWalls() {
 	};
 
 	diggletRB = App->physics->CreateStaticChain(0, 0, diggletR, 12);
+	diggletRB->body->GetFixtureList()->SetRestitution(1.5);
 
 	int diggletL[12] = {
 	23, 176,
@@ -298,6 +312,7 @@ void ModuleSceneIntro::CreateWalls() {
 	};
 
 	diggletLB = App->physics->CreateStaticChain(0, 0, diggletL, 12);
+	diggletLB->body->GetFixtureList()->SetRestitution(1.5);
 
 	int leftSmallWall[30] = {
 	26, 122,
@@ -367,27 +382,46 @@ void ModuleSceneIntro::CreateWalls() {
 	starWallB = App->physics->CreateStaticChain(0, 0, starWall, 30);
 
 	int leftTriangle[12] = {
-	35, 209,
-	35, 225,
-	38, 230,
-	48, 237,
-	49, 233,
-	37, 209
+		38, 211,
+		40, 224,
+		49, 234,
+		48, 236,
+		36, 228,
+		35, 210
 	};
 
 	leftTriangleB = App->physics->CreateStaticChain(0, 0, leftTriangle, 12);
 
-	int rightTriangle[10] = {
-	 110, 233,
-	122, 209,
-	125, 210,
-	125, 227,
-	111, 237
+	int leftTriangleBounce[8] = {
+		38, 210,
+		39, 224,
+		49, 234,
+		40, 215
 	};
 
-	rightTriangleB = App->physics->CreateStaticChain(0, 0, rightTriangle, 10);
+	leftTriangleBounceB = App->physics->CreateStaticChain(0, 0, leftTriangleBounce, 8);
+	leftTriangleBounceB->body->GetFixtureList()->SetRestitution(4);
 
+	int rightTriangle[12] = {
+		111, 232,
+		121, 224,
+		122, 210,
+		124, 210,
+		125, 227,
+		112, 236
+	};
 
+	rightTriangleB = App->physics->CreateStaticChain(0, 0, rightTriangle, 12);
+
+	int rightTriangleBounce[8] = {
+		111, 232,
+		121, 225,
+		122, 211,
+		113, 228
+	};
+
+	rightTriangleBounceB = App->physics->CreateStaticChain(0, 0, rightTriangleBounce, 8);
+	rightTriangleBounceB->body->GetFixtureList()->SetRestitution(4);
 }
 
 void ModuleSceneIntro::CreateBallInMousePos()

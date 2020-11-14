@@ -33,6 +33,10 @@ public:
 	PhysBody* starWallB;
 	PhysBody* rightTriangleB;
 	PhysBody* leftTriangleB;
+	PhysBody* leftTriangleBounceB;
+	PhysBody* rightTriangleBounceB;
+
+	float maxSpeed = 10.0f;
 
 	p2List<PhysBody*> balls;
 
