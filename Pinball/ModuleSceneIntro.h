@@ -54,4 +54,8 @@ public:
 
 public:
 
+
+private:
+	bool waitingForBallReset = false;
+	PhysBody* ballWaitingForReset = nullptr;
 };

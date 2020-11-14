@@ -51,6 +51,11 @@ bool ModuleSceneIntro::CleanUp()
 // Update: draw background
 update_status ModuleSceneIntro::Update()
 {
+	if (waitingForBallReset) {
+		waitingForBallReset = false;
+		ResetBall(ballWaitingForReset);
+	}
+
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
 		CreateBallInMousePos();
@@ -75,11 +80,13 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB) {
 
 	if (bodyA->type == COLLIDER_TYPE::BALL && bodyB->type == COLLIDER_TYPE::DEATH) {
 		LOG("BALL DEAD");
-		ResetBall(bodyA);
+		waitingForBallReset = true;
+		ballWaitingForReset = bodyA;
 	}
 	if (bodyA->type == COLLIDER_TYPE::DEATH && bodyB->type == COLLIDER_TYPE::BALL) {
 		LOG("BALL DEAD");
-		ResetBall(bodyB);
+		waitingForBallReset = true;
+		ballWaitingForReset = bodyB;
 	}
 
 }
@@ -450,11 +457,10 @@ void ModuleSceneIntro::CreateBall()
 void ModuleSceneIntro::ResetBall(PhysBody *ball)
 {
 	b2Vec2 ballpos;
-	ballpos.x = 167;
-	ballpos.y = 265;
+	ballpos.x = PIXEL_TO_METERS(167.0f);
+	ballpos.y = PIXEL_TO_METERS(265.0f);
 	ball->body->SetTransform(ballpos,0.0f);
 	ball->body->SetLinearVelocity(b2Vec2(0, 0));
-
 }
 
 void ModuleSceneIntro::CreateBallInMousePos()
