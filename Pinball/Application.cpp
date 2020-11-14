@@ -36,8 +36,9 @@ Application::Application()
 	AddModule(scene_intro);
 	AddModule(player);
 	AddModule(physics);
-	AddModule(renderer);
 	AddModule(ui);
+	AddModule(renderer);
+	
 }
 
 Application::~Application()

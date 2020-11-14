@@ -86,7 +86,6 @@
     <ClInclude Include="ModuleWindow.h" />
     <ClInclude Include="p2DynArray.h" />
     <ClInclude Include="p2Point.h" />
-    <ClInclude Include="SString.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />

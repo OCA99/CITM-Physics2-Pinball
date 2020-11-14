@@ -38,11 +38,11 @@ public:
 	//Param texturePath	- The path to the texture file
 	// Param characters		- The lookup table. All characters displayed in the same order as the texture
 	// Param rows			- The amount of character rows in the texture
-	int Load(const char* texturePath, const char* characters, uint rows = 1);
+	int LoadFont(const char* texturePath, const char* characters, uint rows = 1);
 
 	// Removes a font by its index
 	// Unloads the texture and removes it from the fonts array
-	void UnLoad(int fontIndex);
+	void UnLoadFont(int fontIndex);
 
 	// Create a surface from text
 	void BlitText(int x, int y, int fontIndex, const char* text) const;
