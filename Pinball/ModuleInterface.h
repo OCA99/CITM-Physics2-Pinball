@@ -6,6 +6,7 @@
 
 #define MAX_FONTS 10
 #define MAX_FONT_CHARS 256
+#define DYNAMIC_TEXT_LEN 6
 
 struct SDL_Texture;
 
@@ -27,11 +28,17 @@ class ModuleInterface : public Module
 {
 public:
 
+	bool Start();
+
 	// Constructor
 	ModuleInterface(Application* app, bool start_enabled = true);
 
 	// Destructor
 	~ModuleInterface();
+
+	update_status PostUpdate();
+
+	void IntToString(char* buffer, int k);
 
 	// Loads a font file from a texture
 	// Returns a font index from the fonts array
@@ -46,6 +53,13 @@ public:
 
 	// Create a surface from text
 	void BlitText(int x, int y, int fontIndex, const char* text) const;
+
+
+	//text
+	const char* text = { "SCORE" };
+	int score = 0;
+	int mainFont = -1;
+	int numberFont = -1;
 
 private:
 	// An array to keep track and store all loaded fonts

@@ -17,6 +17,47 @@ ModuleInterface::~ModuleInterface()
 
 }
 
+bool ModuleInterface::Start() 
+{
+	mainFont = LoadFont("pinball/ClearFont.png", " ABCDEFGHIJKLMNOPQRSTUVWXYZ", 1);
+	numberFont = LoadFont("pinball/BlueFont.png", "0123456789", 1);
+	
+
+	return true;
+}
+
+update_status ModuleInterface::PostUpdate() 
+{
+	BlitText(4, 278, mainFont, text);
+
+	char scoreChar[DYNAMIC_TEXT_LEN + 1] = { "000000" };
+	if (score != 0) {
+	
+		IntToString(scoreChar, score);
+	}
+	
+	BlitText(140, 278, numberFont, scoreChar);
+
+	return UPDATE_CONTINUE;
+
+}
+
+void ModuleInterface::IntToString(char* buffer, int k) {
+
+	for (int i = 0; i < DYNAMIC_TEXT_LEN; i++) {
+		buffer[i] = '0';
+	}
+
+	buffer[DYNAMIC_TEXT_LEN] = 0;
+
+	int i = DYNAMIC_TEXT_LEN - 1;
+	while (k != 0) {
+		if (i < 0) break;
+		buffer[i--] += k % 10;
+		k /= 10;
+	}
+}
+
 // Load new texture from file path
 int ModuleInterface::LoadFont(const char* texture_path, const char* characters, uint rows)
 {

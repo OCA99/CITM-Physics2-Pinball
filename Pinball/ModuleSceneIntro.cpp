@@ -77,7 +77,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB) {
 update_status ModuleSceneIntro::PostUpdate()
 {
 	App->renderer->Blit(background, 0, 0);
-	App->ui->BlitText(10, 10, font, text);
+	
 
 	//Render each ball Texture
 	p2List_item<PhysBody*>* ball_single = balls.getFirst();
