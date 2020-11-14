@@ -54,7 +54,7 @@ update_status ModulePlayer::PreUpdate()
 	else
 		rightFlipperBody->body->ApplyTorque(-15.0f, true);
 
-	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
 		plunge->body->ApplyForceToCenter(b2Vec2(0, 250), true);
 
 

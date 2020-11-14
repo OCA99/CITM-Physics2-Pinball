@@ -19,8 +19,15 @@ ModuleInterface::~ModuleInterface()
 
 bool ModuleInterface::Start() 
 {
+	// Load fonts
 	mainFont = LoadFont("pinball/ClearFont.png", " ABCDEFGHIJKLMNOPQRSTUVWXYZ", 1);
 	numberFont = LoadFont("pinball/BlueFont.png", "0123456789", 1);
+
+	// black rectangle
+	blackRect.x = 0;
+	blackRect.y = 278;
+	blackRect.w = SCREEN_WIDTH;
+	blackRect.h = 12;
 	
 
 	return true;
@@ -28,14 +35,17 @@ bool ModuleInterface::Start()
 
 update_status ModuleInterface::PostUpdate() 
 {
-	BlitText(4, 278, mainFont, text);
-
 	char scoreChar[DYNAMIC_TEXT_LEN + 1] = { "000000" };
 	if (score != 0) {
 	
 		IntToString(scoreChar, score);
 	}
-	
+
+	//black rectangle blit
+	App->renderer->DrawQuad(blackRect, 0, 0, 0, 255, true);
+
+	//text blit
+	BlitText(4, 278, mainFont, text);
 	BlitText(140, 278, numberFont, scoreChar);
 
 	return UPDATE_CONTINUE;

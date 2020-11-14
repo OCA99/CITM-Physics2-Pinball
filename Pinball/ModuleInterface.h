@@ -57,9 +57,10 @@ public:
 
 	//text
 	const char* text = { "SCORE" };
-	int score = 0;
+	int score = 30;
 	int mainFont = -1;
 	int numberFont = -1;
+	SDL_Rect blackRect;
 
 private:
 	// An array to keep track and store all loaded fonts
