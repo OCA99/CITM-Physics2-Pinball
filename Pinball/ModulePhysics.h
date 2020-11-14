@@ -13,6 +13,12 @@
 #define METERS_TO_PIXELS(m) ((int) floor(PIXELS_PER_METER * m))
 #define PIXEL_TO_METERS(p)  ((float) METER_PER_PIXEL * p)
 
+enum COLLIDER_TYPE {
+	UNDEFINED,
+	BALL,
+	DEATH,
+};
+
 class PhysBody
 {
 public:
@@ -30,6 +36,7 @@ public:
 	b2Body* body2;
 	b2Joint* joint;
 	Module* listener;
+	COLLIDER_TYPE type = COLLIDER_TYPE::UNDEFINED;
 };
 
 // Module --------------------------------------

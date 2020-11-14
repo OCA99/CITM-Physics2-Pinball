@@ -27,15 +27,15 @@ bool ModuleSceneIntro::Start()
 
 	background = App->textures->Load("pinball/level.png");
 	ballTexture = App->textures->Load("pinball/sprites.png");
-	/*font = App->textures->Load("pinball/ClearFont.png");*/
-	/*font = App->ui->LoadFont("pinball/ClearFont.png", " ABCDEFGHIJKLMNOPQRSTUVWXYZ", 1);*/
 
-	
+
 
 	ballRect = SDL_Rect({165, 95, 7, 7 });
 	CreateWalls();
 	CreateBall();
 	
+	deathSensor = App->physics->CreateRectangleSensor(192/2, 290, 192, 14);
+	deathSensor->type = COLLIDER_TYPE::DEATH;
 
 	return ret;
 }
@@ -72,6 +72,15 @@ update_status ModuleSceneIntro::Update()
 }
 
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB) {
+
+	if (bodyA->type == COLLIDER_TYPE::BALL && bodyB->type == COLLIDER_TYPE::DEATH) {
+		LOG("BALL DEAD");
+		ResetBall(bodyA);
+	}
+	if (bodyA->type == COLLIDER_TYPE::DEATH && bodyB->type == COLLIDER_TYPE::BALL) {
+		LOG("BALL DEAD");
+		ResetBall(bodyB);
+	}
 
 }
 
@@ -435,6 +444,17 @@ void ModuleSceneIntro::CreateBall()
 {
 	balls.add(App->physics->CreateBall(167, 265, 3.5f));
 	balls.getLast()->data->listener = this;
+	balls.getLast()->data->type = COLLIDER_TYPE::BALL;
+}
+
+void ModuleSceneIntro::ResetBall(PhysBody *ball)
+{
+	b2Vec2 ballpos;
+	ballpos.x = 167;
+	ballpos.y = 265;
+	ball->body->SetTransform(ballpos,0.0f);
+	ball->body->SetLinearVelocity(b2Vec2(0, 0));
+
 }
 
 void ModuleSceneIntro::CreateBallInMousePos()

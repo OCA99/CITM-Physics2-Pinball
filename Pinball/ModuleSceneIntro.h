@@ -36,6 +36,7 @@ public:
 	PhysBody* leftTriangleB;
 	PhysBody* leftTriangleBounceB;
 	PhysBody* rightTriangleBounceB;
+	PhysBody* deathSensor;
 
 	float maxSpeed = 10.0f;
 
@@ -48,6 +49,7 @@ public:
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 	void CreateWalls();
 	void CreateBall();
+	void ResetBall(PhysBody *ball);
 	void CreateBallInMousePos();
 
 public:
