@@ -564,49 +564,51 @@ PhysBody* ModulePhysics::CreatePlunge()
 {
 	b2BodyDef bodyA;
 	bodyA.type = b2_dynamicBody;
-	bodyA.position.Set(PIXEL_TO_METERS(167), PIXEL_TO_METERS(272));
+	bodyA.position.Set(PIXEL_TO_METERS(167), PIXEL_TO_METERS(270));
 
 	b2Body* b1 = world->CreateBody(&bodyA);
 	b2PolygonShape box;
-	box.SetAsBox(PIXEL_TO_METERS(10) * 0.5f, PIXEL_TO_METERS(8) * 0.5f);
+	box.SetAsBox(PIXEL_TO_METERS(8) * 0.5f, PIXEL_TO_METERS(2) * 0.5f);
 
 	b2FixtureDef fixture;
 	fixture.shape = &box;
 	fixture.density = 20.0f;
-	fixture.restitution = 0.1f;
-	fixture.filter.categoryBits = 0x0001;
+	fixture.restitution = 0.0f;
+	fixture.filter.categoryBits = 0x0003;
 	fixture.filter.maskBits = 0x0002;
 
 	b1->CreateFixture(&fixture);
 
 	b2BodyDef bodyB;
 	bodyB.type = b2_staticBody;
-	bodyB.position.Set(PIXEL_TO_METERS(167), PIXEL_TO_METERS(272));
+	bodyB.position.Set(PIXEL_TO_METERS(167), PIXEL_TO_METERS(282));
 
 	b2Body* b2 = world->CreateBody(&bodyB);
 	b2PolygonShape box1;
-	box1.SetAsBox(PIXEL_TO_METERS(10) * 0.5f, PIXEL_TO_METERS(8) * 0.5f);
+	box1.SetAsBox(PIXEL_TO_METERS(8) * 0.5f, PIXEL_TO_METERS(8) * 0.5f);
 
 	b2FixtureDef fixture2;
 	fixture2.shape = &box1;
 	fixture2.density = 1.0f;
-	fixture2.filter.categoryBits = 0x0002;
-	//fixture2.filter.maskBits = 0x0001;
+	fixture2.filter.categoryBits = 0x0004;
+
+	bodyA.bullet = true;
+	bodyB.bullet = true;
 
 	b2->CreateFixture(&fixture2);
 
 	b2PrismaticJointDef jointDef;
 	jointDef.bodyA = b2;
 	jointDef.bodyB = b1;
-	jointDef.collideConnected = true;
+	jointDef.collideConnected = false;
 
 	jointDef.localAxisA.Set(0, 1);
 	jointDef.localAxisA.Normalize();
 	jointDef.localAnchorA.Set(0, 0);
 	jointDef.localAnchorB.Set(0, 0);
 
-	jointDef.lowerTranslation = -1.0f;
-	jointDef.upperTranslation = 1.0f;
+	jointDef.lowerTranslation = -0.2f;
+	jointDef.upperTranslation = -0.1f;
 	jointDef.enableLimit = true;
 	jointDef.maxMotorForce = 200.0f;
 	jointDef.motorSpeed = -200.0f;
