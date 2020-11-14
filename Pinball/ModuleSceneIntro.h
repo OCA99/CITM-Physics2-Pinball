@@ -13,9 +13,7 @@ public:
 	~ModuleSceneIntro();
 	SDL_Texture* background;
 	SDL_Texture* ballTexture;
-	int font = -1;
 
-	const char* text = { "HELLO WORLD" };
 
 	SDL_Rect backRect;
 	SDL_Rect ballRect;
