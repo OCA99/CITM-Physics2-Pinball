@@ -17,6 +17,7 @@ enum COLLIDER_TYPE {
 	UNDEFINED,
 	BALL,
 	DEATH,
+	PIKA,
 };
 
 class PhysBody

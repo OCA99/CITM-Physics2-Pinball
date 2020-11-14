@@ -57,7 +57,7 @@ public:
 
 	//text
 	const char* text = { "SCORE" };
-	int score = 30;
+	int score = 0;
 	int mainFont = -1;
 	int numberFont = -1;
 	SDL_Rect blackRect;

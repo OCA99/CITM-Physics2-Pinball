@@ -78,17 +78,24 @@ update_status ModuleSceneIntro::Update()
 
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB) {
 
-	if (bodyA->type == COLLIDER_TYPE::BALL && bodyB->type == COLLIDER_TYPE::DEATH) {
-		LOG("BALL DEAD");
-		waitingForBallReset = true;
-		ballWaitingForReset = bodyA;
-	}
-	if (bodyA->type == COLLIDER_TYPE::DEATH && bodyB->type == COLLIDER_TYPE::BALL) {
-		LOG("BALL DEAD");
-		waitingForBallReset = true;
-		ballWaitingForReset = bodyB;
+	PhysBody* c;
+
+	if (bodyB->type == COLLIDER_TYPE::BALL) {
+		c = bodyA;
+		bodyA = bodyB;
+		bodyB = c;
 	}
 
+	if (bodyA->type == COLLIDER_TYPE::BALL) {
+		if (bodyB->type == COLLIDER_TYPE::DEATH) {
+			waitingForBallReset = true;
+			ballWaitingForReset = bodyA;
+		}
+
+		if (bodyB->type == COLLIDER_TYPE::PIKA) {
+			App->ui->score += 100;
+		}
+	}
 }
 
 update_status ModuleSceneIntro::PostUpdate()
@@ -445,6 +452,28 @@ void ModuleSceneIntro::CreateWalls() {
 
 	rightTriangleBounceB = App->physics->CreateStaticChain(0, 0, rightTriangleBounce, 8);
 	rightTriangleBounceB->body->GetFixtureList()->SetRestitution(4);
+
+	int leftPika[8] = {
+		8, 257,
+		21, 257,
+		21, 260,
+		8, 260
+	};
+
+	pikaLeftB = App->physics->CreateStaticChain(0, 0, leftPika, 8);
+	pikaLeftB->body->GetFixtureList()->SetRestitution(4);
+	pikaLeftB->type = COLLIDER_TYPE::PIKA;
+
+	int rightPika[8] = {
+		139, 258,
+		152, 258,
+		152, 260,
+		139, 260
+	};
+
+	pikaRightB = App->physics->CreateStaticChain(0, 0, rightPika, 8);
+	pikaRightB->body->GetFixtureList()->SetRestitution(4);
+	pikaRightB->type = COLLIDER_TYPE::PIKA;
 }
 
 void ModuleSceneIntro::CreateBall()
@@ -474,5 +503,5 @@ void ModuleSceneIntro::CreateBallInMousePos()
 
 	balls.add(App->physics->CreateBall(x, y, radius));
 	balls.getLast()->data->listener = this;
-	//}
+	balls.getLast()->data->type = COLLIDER_TYPE::BALL;
 }

@@ -38,6 +38,9 @@ public:
 	PhysBody* rightTriangleBounceB;
 	PhysBody* deathSensor;
 
+	PhysBody* pikaLeftB;
+	PhysBody* pikaRightB;
+
 	float maxSpeed = 10.0f;
 
 	p2List<PhysBody*> balls;
