@@ -47,6 +47,7 @@ public:
 	bool CleanUp();
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 	void CreateWalls();
+	void CreateBall();
 	void CreateBallInMousePos();
 
 public:

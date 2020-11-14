@@ -34,6 +34,7 @@ bool ModuleSceneIntro::Start()
 
 	ballRect = SDL_Rect({165, 95, 7, 7 });
 	CreateWalls();
+	CreateBall();
 	
 
 	return ret;
@@ -430,14 +431,22 @@ void ModuleSceneIntro::CreateWalls() {
 	rightTriangleBounceB->body->GetFixtureList()->SetRestitution(4);
 }
 
+void ModuleSceneIntro::CreateBall()
+{
+	balls.add(App->physics->CreateBall(167, 265, 3.5f));
+	balls.getLast()->data->listener = this;
+}
+
 void ModuleSceneIntro::CreateBallInMousePos()
 {
+	//if(debug){}
 	int x, y;
 	float radius = 3.5f;
 
 	x = App->input->GetMouseX();
 	y = App->input->GetMouseY();
 
-	balls.add(App->physics->CreateBall(x , y, radius));
+	balls.add(App->physics->CreateBall(x, y, radius));
 	balls.getLast()->data->listener = this;
+	//}
 }
