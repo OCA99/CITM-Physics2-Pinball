@@ -6,6 +6,7 @@
 #include "ModuleTextures.h"
 #include "ModuleAudio.h"
 #include "ModulePhysics.h"
+#include "ModuleInterface.h"
 #include "Application.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -26,6 +27,10 @@ bool ModuleSceneIntro::Start()
 
 	background = App->textures->Load("pinball/level.png");
 	ballTexture = App->textures->Load("pinball/sprites.png");
+	/*font = App->textures->Load("pinball/ClearFont.png");*/
+	/*font = App->ui->LoadFont("pinball/ClearFont.png", " ABCDEFGHIJKLMNOPQRSTUVWXYZ", 1);*/
+
+	
 
 	ballRect = SDL_Rect({165, 95, 7, 7 });
 	CreateWalls();
@@ -59,6 +64,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB) {
 update_status ModuleSceneIntro::PostUpdate()
 {
 	App->renderer->Blit(background, 0, 0);
+	App->ui->BlitText(10, 10, font, text);
 
 	//Render each ball Texture
 	p2List_item<PhysBody*>* ball_single = balls.getFirst();

@@ -18,7 +18,7 @@ ModuleInterface::~ModuleInterface()
 }
 
 // Load new texture from file path
-int ModuleInterface::Load(const char* texture_path, const char* characters, uint rows)
+int ModuleInterface::LoadFont(const char* texture_path, const char* characters, uint rows)
 {
 	int id = -1;
 
@@ -74,7 +74,7 @@ int ModuleInterface::Load(const char* texture_path, const char* characters, uint
 	return id;
 }
 
-void ModuleInterface::UnLoad(int font_id)
+void ModuleInterface::UnLoadFont(int font_id)
 {
 	if (font_id >= 0 && font_id < MAX_FONTS && fonts[font_id].texture != nullptr)
 	{
