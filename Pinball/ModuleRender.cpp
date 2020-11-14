@@ -178,8 +178,8 @@ bool ModuleRender::DrawCircle(int x, int y, int radius, Uint8 r, Uint8 g, Uint8 
 
 	for(uint i = 0; i < 360; ++i)
 	{
-		points[i].x = (int) (x + radius * cos( i * factor));
-		points[i].y = (int) (y + radius * sin( i * factor));
+		points[i].x = (int) (x * SCREEN_SIZE + radius * SCREEN_SIZE * cos( i * factor));
+		points[i].y = (int) (y * SCREEN_SIZE + radius * SCREEN_SIZE * sin( i * factor));
 	}
 
 	result = SDL_RenderDrawPoints(renderer, points, 360);

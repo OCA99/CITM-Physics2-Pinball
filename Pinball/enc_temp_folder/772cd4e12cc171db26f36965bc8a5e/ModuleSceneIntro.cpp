@@ -169,7 +169,7 @@ void ModuleSceneIntro::CreateWalls() {
 	int leftL[16] = {
 		52, 260,
 		56, 257,
-		55, 253,
+		53, 252,
 		24, 231,
 		24, 207,
 		20, 207,

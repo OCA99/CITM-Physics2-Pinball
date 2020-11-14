@@ -222,7 +222,7 @@ update_status ModulePhysics::PostUpdate()
 				{
 					b2CircleShape* shape = (b2CircleShape*)f->GetShape();
 					b2Vec2 pos = f->GetBody()->GetPosition();
-					App->renderer->DrawCircle(METERS_TO_PIXELS(pos.x), METERS_TO_PIXELS(pos.y), METERS_TO_PIXELS(shape->m_radius), 255, 255, 255);
+					App->renderer->DrawCircle(METERS_TO_PIXELS(pos.x), METERS_TO_PIXELS(pos.y), METERS_TO_PIXELS(shape->m_radius), 255, 0, 0);
 				}
 				break;
 
@@ -390,40 +390,40 @@ void ModulePhysics::BeginContact(b2Contact* contact)
 }
 
 PhysBody* ModulePhysics::CreateRightFlipper(p2Point<int>& pivot) {
-	b2BodyDef triggerBodyDef;
-	triggerBodyDef.type = b2_dynamicBody;
-	triggerBodyDef.position.Set(PIXEL_TO_METERS(0), PIXEL_TO_METERS(0));
+	b2BodyDef flipperBodyDef;
+	flipperBodyDef.type = b2_dynamicBody;
+	flipperBodyDef.position.Set(PIXEL_TO_METERS(0), PIXEL_TO_METERS(0));
 
-	b2Body* triggerBody = world->CreateBody(&triggerBodyDef);
+	b2Body* flipperBody = world->CreateBody(&flipperBodyDef);
 
-	b2PolygonShape triggerShape;
+	b2PolygonShape flipperShape;
 
-	int coords[12] = {
-		107, 260,
-		107, 253,
-		96, 255,
-		85, 257,
-		94, 259,
-		103, 261
+	int coords[10] = {
+		86, 257,
+		108, 254,
+		109, 256,
+		108, 260,
+		89, 258
 	};
 
-	b2Vec2 rightTriggerVec[6];
-	for (int i = 0; i < 6; i++)
+	b2Vec2 rightTriggerVec[5];
+	for (int i = 0; i < 5; i++)
 	{
 		rightTriggerVec[i].x = PIXEL_TO_METERS(coords[i * 2]);
 		rightTriggerVec[i].y = PIXEL_TO_METERS(coords[i * 2 + 1]);
 	}
 
-	triggerShape.Set(rightTriggerVec, 6);
+	flipperShape.Set(rightTriggerVec, 5);
 
-	b2FixtureDef triggerFixtureDef;
-	triggerFixtureDef.shape = &triggerShape;
-	triggerFixtureDef.density = 1;
-	//triggerFixtureDef.filter.groupIndex = groupIndex::RIGID_PINBALL;
-	triggerBody->CreateFixture(&triggerFixtureDef);
+	b2FixtureDef flipperFixtureDef;
+	flipperFixtureDef.shape = &flipperShape;
+	flipperFixtureDef.density = 10;
+	flipperFixtureDef.filter.categoryBits = 0x0001;
+	flipperFixtureDef.filter.maskBits = 0x0002;
+	flipperBody->CreateFixture(&flipperFixtureDef);
 
-	b2Vec2 centerRectangle = triggerBody->GetWorldCenter();
-	centerRectangle += (b2Vec2(PIXEL_TO_METERS(5), PIXEL_TO_METERS(0)));
+	b2Vec2 centerRectangle = flipperBody->GetWorldCenter();
+	centerRectangle += (b2Vec2(PIXEL_TO_METERS(7), PIXEL_TO_METERS(0)));
 
 	b2BodyDef pivotBodyDef;
 	pivotBodyDef.type = b2_staticBody;
@@ -435,64 +435,65 @@ PhysBody* ModulePhysics::CreateRightFlipper(p2Point<int>& pivot) {
 	pivotCircle.m_radius = PIXEL_TO_METERS(0.5f);
 	b2FixtureDef pivotFixtureDef;
 	pivotFixtureDef.shape = &pivotCircle;
-	//pivotFixtureDef.filter.groupIndex = groupIndex::RIGID_PINBALL;
+	pivotFixtureDef.filter.categoryBits = 0x0001;
+	pivotFixtureDef.filter.maskBits = 0x0002;
 	pivotBody->CreateFixture(&pivotFixtureDef);
 
 	b2RevoluteJointDef revJointDef;
-	revJointDef.Initialize(triggerBody, pivotBody, centerRectangle);
+	revJointDef.Initialize(flipperBody, pivotBody, centerRectangle);
 	revJointDef.upperAngle = 0.5f;
 	revJointDef.lowerAngle = -0.5f;
 	revJointDef.enableLimit = true;
-	revJointDef.maxMotorTorque = 15.0f;
+	revJointDef.maxMotorTorque = 10.0f;
 	revJointDef.motorSpeed = 0.0f;
 	revJointDef.enableMotor = true;
 	b2Joint* joint = world->CreateJoint(&revJointDef);
 
-	PhysBody* rightTrigger = new PhysBody();
-	rightTrigger->body = triggerBody;
-	rightTrigger->body2 = pivotBody;
-	rightTrigger->joint = joint;
-	triggerBody->SetUserData(rightTrigger);
+	flipperBody->SetBullet(true);
 
-	return rightTrigger;
+	PhysBody* rightFlipper = new PhysBody();
+	rightFlipper->body = flipperBody;
+	rightFlipper->body2 = pivotBody;
+	rightFlipper->joint = joint;
+	flipperBody->SetUserData(rightFlipper);
+
+	return rightFlipper;
 }
 
 PhysBody* ModulePhysics::CreateLeftFlipper(p2Point<int>& pivot) {
+	b2BodyDef flipperBodyDef;
+	flipperBodyDef.type = b2_dynamicBody;
+	flipperBodyDef.position.Set(PIXEL_TO_METERS(0), PIXEL_TO_METERS(0));
 
+	b2Body* flipperBody = world->CreateBody(&flipperBodyDef);
 
-	b2BodyDef triggerBodyDef;
-	triggerBodyDef.type = b2_dynamicBody;
-	triggerBodyDef.position.Set(PIXEL_TO_METERS(0), PIXEL_TO_METERS(0));
+	b2PolygonShape flipperShape;
 
-	b2Body* triggerBody = world->CreateBody(&triggerBodyDef);
-
-	b2PolygonShape triggerShape;
-
-	int coords[12] = {
-		54, 253,
-		66, 255,
+	int coords[10] = {
 		74, 257,
-		68, 259,
-		58, 261,
-		52, 260
+		53, 254,
+		51, 257,
+		52, 260,
+		71, 258
 	};
 
-	b2Vec2 leftTriggerVec[6];
-	for (int i = 0; i < 6; i++)
+	b2Vec2 leftFlipperVec[5];
+	for (int i = 0; i < 5; i++)
 	{
-		leftTriggerVec[i].x = PIXEL_TO_METERS(coords[i * 2]);
-		leftTriggerVec[i].y = PIXEL_TO_METERS(coords[i * 2 + 1]);
+		leftFlipperVec[i].x = PIXEL_TO_METERS(coords[i * 2]);
+		leftFlipperVec[i].y = PIXEL_TO_METERS(coords[i * 2 + 1]);
 	}
 
-	triggerShape.Set(leftTriggerVec, 6);
+	flipperShape.Set(leftFlipperVec, 5);
 
-	b2FixtureDef triggerFixtureDef;
-	triggerFixtureDef.shape = &triggerShape;
-	triggerFixtureDef.density = 1;
-	//triggerFixtureDef.filter.groupIndex = groupIndex::RIGID_PINBALL;
-	triggerBody->CreateFixture(&triggerFixtureDef);
+	b2FixtureDef flipperFixtureDef;
+	flipperFixtureDef.shape = &flipperShape;
+	flipperFixtureDef.density = 10;
+	flipperFixtureDef.filter.categoryBits = 0x0001;
+	flipperFixtureDef.filter.maskBits = 0x0002;
+	flipperBody->CreateFixture(&flipperFixtureDef);
 
-	b2Vec2 centerRectangle = triggerBody->GetWorldCenter();
+	b2Vec2 centerRectangle = flipperBody->GetWorldCenter();
 	centerRectangle += (b2Vec2(PIXEL_TO_METERS(-5), 0));
 
 	b2BodyDef pivotBodyDef;
@@ -505,32 +506,36 @@ PhysBody* ModulePhysics::CreateLeftFlipper(p2Point<int>& pivot) {
 	pivotCircle.m_radius = PIXEL_TO_METERS(0.5f);
 	b2FixtureDef pivotFixtureDef;
 	pivotFixtureDef.shape = &pivotCircle;
-	//pivotFixtureDef.filter.groupIndex = groupIndex::RIGID_PINBALL;
+	pivotFixtureDef.filter.categoryBits = 0x0001;
+	pivotFixtureDef.filter.maskBits = 0x0002;
 	pivotBody->CreateFixture(&pivotFixtureDef);
 
 	b2RevoluteJointDef revJointDef;
-	revJointDef.Initialize(triggerBody, pivotBody, centerRectangle);
+	revJointDef.Initialize(flipperBody, pivotBody, centerRectangle);
 	revJointDef.upperAngle = 0.5f;
 	revJointDef.lowerAngle = -0.5f;
 	revJointDef.enableLimit = true;
-	revJointDef.maxMotorTorque = 15.0f;
+	revJointDef.maxMotorTorque = 10.0f;
 	revJointDef.motorSpeed = 0.0f;
 	revJointDef.enableMotor = true;
 	b2Joint* joint = world->CreateJoint(&revJointDef);
 
-	PhysBody* leftTrigger = new PhysBody();
-	leftTrigger->body = triggerBody;
-	leftTrigger->body2 = pivotBody;
-	leftTrigger->joint = joint;
-	triggerBody->SetUserData(leftTrigger);
+	flipperBody->SetBullet(true);
 
-	return leftTrigger;
+	PhysBody* leftFlipper = new PhysBody();
+	leftFlipper->body = flipperBody;
+	leftFlipper->body2 = pivotBody;
+	leftFlipper->joint = joint;
+	flipperBody->SetUserData(leftFlipper);
+
+	return leftFlipper;
 }
-PhysBody* ModulePhysics::CreateBall(int x, int y, int radius)
+
+PhysBody* ModulePhysics::CreateBall(int x, int y, float radius)
 {
 	b2BodyDef body;
 	body.type = b2_dynamicBody;
-	body.position.Set(PIXEL_TO_METERS(x * SCREEN_SIZE) , PIXEL_TO_METERS(y * SCREEN_SIZE) );
+	body.position.Set(PIXEL_TO_METERS(x) , PIXEL_TO_METERS(y) );
 	body.bullet = true;
 
 	b2Body* b = world->CreateBody(&body);
@@ -539,10 +544,10 @@ PhysBody* ModulePhysics::CreateBall(int x, int y, int radius)
 	shape.m_radius = PIXEL_TO_METERS(radius);
 	b2FixtureDef fixture;
 	fixture.shape = &shape;
-	fixture.density = 1.0f;
+	fixture.density = 8.0f;
 	fixture.friction = 0.0f;
 	fixture.restitution = 0.3f;
-	fixture.filter.groupIndex = BODY_INDEX::BALL;
+	fixture.filter.categoryBits = 0x0002;
 
 	b->CreateFixture(&fixture);
 
@@ -550,7 +555,6 @@ PhysBody* ModulePhysics::CreateBall(int x, int y, int radius)
 	pbody->body = b;
 	b->SetUserData(pbody);
 	pbody->width = pbody->height = radius;
-	pbody->bodyType = _BALL;
 
 	return pbody;
 

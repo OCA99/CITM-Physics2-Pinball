@@ -13,33 +13,6 @@
 #define METERS_TO_PIXELS(m) ((int) floor(PIXELS_PER_METER * m))
 #define PIXEL_TO_METERS(p)  ((float) METER_PER_PIXEL * p)
 
-enum BODY_INDEX
-{
-	BALL,
-	WALL,
-	TRIGGER,
-	BUMPER,
-	PLUNGE,
-
-	NOT_DEFINED
-};
-enum PHYSIC_BODY_TYPE
-{
-	_BALL,
-	_WALL,
-	_TRIGGER,
-	_BUMPER,
-	_PLUNGE,
-	_DEAD_SENSOR,
-	_REBOUNCER1,
-	_REBOUNCER2,
-	_REBOUNCER3,
-
-	_LEVEL_CHANGE,
-
-	_NOT_DEFINED
-};
-
 class PhysBody
 {
 public:
@@ -57,8 +30,6 @@ public:
 	b2Body* body2;
 	b2Joint* joint;
 	Module* listener;
-
-	PHYSIC_BODY_TYPE bodyType = _NOT_DEFINED;
 };
 
 // Module --------------------------------------
@@ -81,7 +52,7 @@ public:
 	PhysBody* CreateRectangleSensor(int x, int y, int width, int height);
 	PhysBody* CreateChain(int x, int y, int* points, int size);
 	PhysBody* CreateStaticChain(int x, int y, int* points, int size);
-	PhysBody* CreateBall(int x, int y, int radius);
+	PhysBody* CreateBall(int x, int y, float radius);
 
 	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);
