@@ -33,3 +33,12 @@ Differences with the original game:
 - Scores are different.
 - Some combo elements are different.
 - The original game is quite complex and has progression and save games.
+
+Sources:
+
+- Images:
+  - [Pinball](https://www.spriters-resource.com/game_boy_gbc/pokemonpinball/sheet/6267/)
+- Sound:
+  - [Music](https://www.youtube.com/watch?v=wR3gaYTqkDQ)
+  - [FX](https://www.youtube.com/watch?v=pfPmI6HWphY)
+  - [FX](https://www.youtube.com/watch?v=VP4Hu9gTHzg)
