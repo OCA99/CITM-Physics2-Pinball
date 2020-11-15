@@ -48,9 +48,11 @@ bool ModuleAudio::Start()
 	App->audio->LoadFx("audio/sound_fx/Combo.ogg");//1 fet
 	App->audio->LoadFx("audio/sound_fx/Dead.ogg");//2 fet
 	App->audio->LoadFx("audio/sound_fx/Lose.ogg");//3 fet
-	App->audio->LoadFx("audio/sound_fx/Pika.ogg");//4 fet
+	App->audio->LoadFx("audio/sound_fx/Plunge.ogg");//4 fet
 	App->audio->LoadFx("audio/sound_fx/StartGame.ogg");//5 fet
-
+	App->audio->LoadFx("audio/sound_fx/Diglet.ogg");//6 fet
+	App->audio->LoadFx("audio/sound_fx/Triangle.ogg");//7 fet
+	App->audio->LoadFx("audio/sound_fx/Pika.ogg");//8 fet
 
 
 	return ret;

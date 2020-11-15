@@ -16,8 +16,11 @@
 enum COLLIDER_TYPE {
 	UNDEFINED,
 	BALL,
+	PLUNGE,
 	DEATH,
 	PIKA,
+	DIGLET,
+	TRIANGLE,
 };
 
 class PhysBody

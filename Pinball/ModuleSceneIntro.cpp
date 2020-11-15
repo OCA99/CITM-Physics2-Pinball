@@ -109,8 +109,20 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB) {
 
 		if (bodyB->type == COLLIDER_TYPE::PIKA) {
 			App->ui->score += 100;
+			App->audio->PlayFx(8, 0);
+
+		}
+		if (bodyB->type == COLLIDER_TYPE::DIGLET) {
+			App->ui->score += 50;
+			App->audio->PlayFx(6, 0);
+		}
+		if (bodyB->type == COLLIDER_TYPE::TRIANGLE) {
+			App->ui->score += 20;
+			App->audio->PlayFx(7, 0);
+
 		}
 	}
+	
 }
 
 update_status ModuleSceneIntro::PostUpdate()
@@ -350,6 +362,7 @@ void ModuleSceneIntro::CreateWalls() {
 
 	diggletRB = App->physics->CreateStaticChain(0, 0, diggletR, 12);
 	diggletRB->body->GetFixtureList()->SetRestitution(1.5);
+	diggletRB->type = COLLIDER_TYPE::DIGLET;
 
 	int diggletL[12] = {
 	23, 176,
@@ -362,6 +375,7 @@ void ModuleSceneIntro::CreateWalls() {
 
 	diggletLB = App->physics->CreateStaticChain(0, 0, diggletL, 12);
 	diggletLB->body->GetFixtureList()->SetRestitution(1.5);
+	diggletLB->type = COLLIDER_TYPE::DIGLET;
 
 	int leftSmallWall[30] = {
 	26, 122,
@@ -440,6 +454,7 @@ void ModuleSceneIntro::CreateWalls() {
 	};
 
 	leftTriangleB = App->physics->CreateStaticChain(0, 0, leftTriangle, 12);
+	leftTriangleB->type = COLLIDER_TYPE::TRIANGLE;
 
 	int leftTriangleBounce[8] = {
 		38, 210,
@@ -450,6 +465,7 @@ void ModuleSceneIntro::CreateWalls() {
 
 	leftTriangleBounceB = App->physics->CreateStaticChain(0, 0, leftTriangleBounce, 8);
 	leftTriangleBounceB->body->GetFixtureList()->SetRestitution(4);
+	leftTriangleBounceB->type = COLLIDER_TYPE::TRIANGLE;
 
 	int rightTriangle[12] = {
 		111, 232,
@@ -461,7 +477,7 @@ void ModuleSceneIntro::CreateWalls() {
 	};
 
 	rightTriangleB = App->physics->CreateStaticChain(0, 0, rightTriangle, 12);
-
+	rightTriangleB->type = COLLIDER_TYPE::TRIANGLE;
 	int rightTriangleBounce[8] = {
 		111, 232,
 		121, 225,
@@ -471,6 +487,7 @@ void ModuleSceneIntro::CreateWalls() {
 
 	rightTriangleBounceB = App->physics->CreateStaticChain(0, 0, rightTriangleBounce, 8);
 	rightTriangleBounceB->body->GetFixtureList()->SetRestitution(4);
+	rightTriangleBounceB->type = COLLIDER_TYPE::TRIANGLE;
 
 	int leftPika[8] = {
 		8, 257,
