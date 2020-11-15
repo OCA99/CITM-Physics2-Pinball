@@ -117,7 +117,6 @@ update_status Application::Update()
 
 	if (frameTime < frameDelay) {
 		SDL_Delay(frameDelay - frameTime);
-		LOG("delay");
 	}
 
 	return ret;
