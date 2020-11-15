@@ -33,6 +33,7 @@ bool ModuleSceneIntro::Start()
 	ballRect = SDL_Rect({165, 95, 7, 7 });
 	leftPikaRect = SDL_Rect({263, 117, 13, 14});
 	rightPikaRect = SDL_Rect({276, 117, 13, 14});
+	activeComboRect = SDL_Rect({ 191, 0, 6, 6 });
 
 	pikaAnimation.PushBack(SDL_Rect({ 84, 270, 16, 16 }));
 	pikaAnimation.PushBack(SDL_Rect({ 100, 270, 16, 16 }));
@@ -63,6 +64,7 @@ bool ModuleSceneIntro::CleanUp()
 // Update: draw background
 update_status ModuleSceneIntro::Update()
 {
+
 	if (waitingForBallReset) {
 		waitingForBallReset = false;
 		ResetBall(ballWaitingForReset);
@@ -76,13 +78,25 @@ update_status ModuleSceneIntro::Update()
 	p2List_item<PhysBody*>* ball_single = balls.getFirst();
 	while (ball_single != NULL)
 	{
-		b2Vec2 vel = ball_single->data->body->GetLinearVelocity();
-		float speed = vel.Normalize();
-		if (speed > maxSpeed) {
-			ball_single->data->body->SetLinearVelocity(maxSpeed * vel);
+		p2List_item<PhysBody*>* next = ball_single->next;
+		if (ball_single->data->waitingForDelete) {
+			if (ball_single->data->body != nullptr)
+				App->physics->world->DestroyBody(ball_single->data->body);
+			if (ball_single->data->body2 != nullptr)
+				App->physics->world->DestroyBody(ball_single->data->body2);
+			delete ball_single->data;
+			balls.del(ball_single);
+		}
+		else
+		{
+			b2Vec2 vel = ball_single->data->body->GetLinearVelocity();
+			float speed = vel.Normalize();
+			if (speed > maxSpeed) {
+				ball_single->data->body->SetLinearVelocity(maxSpeed * vel);
+			}
 		}
 
-		ball_single = ball_single->next;
+		ball_single = next;
 	}
 
 
@@ -94,6 +108,9 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB) {
 
 	PhysBody* c;
 
+	if (bodyA == nullptr || bodyB == nullptr)
+		return;
+
 	if (bodyB->type == COLLIDER_TYPE::BALL) {
 		c = bodyA;
 		bodyA = bodyB;
@@ -102,10 +119,15 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB) {
 
 	if (bodyA->type == COLLIDER_TYPE::BALL) {
 		if (bodyB->type == COLLIDER_TYPE::DEATH) {
-			waitingForBallReset = true;
-			ballWaitingForReset = bodyA;
-			CheckLife();
-			App->audio->PlayFx(2, 0);
+			if (bodyA->resettable) {
+				waitingForBallReset = true;
+				ballWaitingForReset = bodyA;
+				CheckLife();
+				App->audio->PlayFx(2, 0);
+			}
+			else {
+				bodyA->waitingForDelete = true;
+			}
 		}
 
 		if (bodyB->type == COLLIDER_TYPE::PIKA) {
@@ -121,6 +143,36 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB) {
 			App->ui->score += 20;
 			App->audio->PlayFx(7, 0);
 
+		}
+
+		if (bodyB->type == COLLIDER_TYPE::COMBO1) {
+			comb1active = !comb1active;
+
+			if (comb1active && comb2active && comb3active) {
+				lifes++;
+				if (lifes > 3) lifes = 3;
+				comb1active = comb2active = comb3active = false;
+			}
+		}
+
+		if (bodyB->type == COLLIDER_TYPE::COMBO2) {
+			comb2active = !comb2active;
+
+			if (comb1active && comb2active && comb3active) {
+				lifes++;
+				if (lifes > 3) lifes = 3;
+				comb1active = comb2active = comb3active = false;
+			}
+		}
+
+		if (bodyB->type == COLLIDER_TYPE::COMBO3) {
+			comb3active = !comb3active;
+
+			if (comb1active && comb2active && comb3active) {
+				lifes++;
+				if (lifes > 3) lifes = 3;
+				comb1active = comb2active = comb3active = false;
+			}
 		}
 	}
 	
@@ -146,6 +198,16 @@ update_status ModuleSceneIntro::PostUpdate()
 	App->renderer->Blit(objectsTexture, 8, 247, &leftPikaRect);
 	App->renderer->Blit(objectsTexture, 139, 247, &rightPikaRect);
 	App->renderer->Blit(objectsTexture, 160, 262, &pikaAnimation.GetCurrentFrame());
+
+	if (comb1active) {
+		App->renderer->Blit(objectsTexture, 55, 58, &activeComboRect);
+	}
+	if (comb2active) {
+		App->renderer->Blit(objectsTexture, 77, 47, &activeComboRect);
+	}
+	if (comb3active) {
+		App->renderer->Blit(objectsTexture, 99, 48, &activeComboRect);
+	}
 
 	return UPDATE_CONTINUE;
 }
@@ -511,6 +573,15 @@ void ModuleSceneIntro::CreateWalls() {
 	pikaRightB = App->physics->CreateStaticChain(0, 0, rightPika, 8);
 	pikaRightB->body->GetFixtureList()->SetRestitution(4);
 	pikaRightB->type = COLLIDER_TYPE::PIKA;
+
+	PhysBody* combo1 = App->physics->CreateRectangleSensor(58, 66, 16, 8);
+	combo1->type = COLLIDER_TYPE::COMBO1;
+
+	PhysBody* combo2 = App->physics->CreateRectangleSensor(80, 52, 17, 8);
+	combo2->type = COLLIDER_TYPE::COMBO2;
+
+	PhysBody* combo3 = App->physics->CreateRectangleSensor(102, 53, 16, 8);
+	combo3->type = COLLIDER_TYPE::COMBO3;
 }
 
 void ModuleSceneIntro::CreateBall()
@@ -539,6 +610,7 @@ void ModuleSceneIntro::CreateBallInMousePos()
 	y = App->input->GetMouseY();
 
 	balls.add(App->physics->CreateBall(x, y, radius));
+	balls.getLast()->data->resettable = false;
 	balls.getLast()->data->listener = this;
 	balls.getLast()->data->type = COLLIDER_TYPE::BALL;
 }

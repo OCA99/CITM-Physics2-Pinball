@@ -21,6 +21,9 @@ enum COLLIDER_TYPE {
 	PIKA,
 	DIGLET,
 	TRIANGLE,
+	COMBO1,
+	COMBO2,
+	COMBO3
 };
 
 class PhysBody
@@ -41,6 +44,8 @@ public:
 	b2Joint* joint;
 	Module* listener;
 	COLLIDER_TYPE type = COLLIDER_TYPE::UNDEFINED;
+	bool resettable = true;
+	bool waitingForDelete = false;
 };
 
 // Module --------------------------------------

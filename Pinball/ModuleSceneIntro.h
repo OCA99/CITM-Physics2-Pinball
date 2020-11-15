@@ -23,6 +23,7 @@ public:
 	SDL_Rect ballRect;
 	SDL_Rect leftPikaRect;
 	SDL_Rect rightPikaRect;
+	SDL_Rect activeComboRect;
 
 	//physbodies
 
@@ -72,4 +73,8 @@ public:
 private:
 	bool waitingForBallReset = false;
 	PhysBody* ballWaitingForReset = nullptr;
+
+	bool comb1active = false;
+	bool comb2active = false;
+	bool comb3active = false;
 };

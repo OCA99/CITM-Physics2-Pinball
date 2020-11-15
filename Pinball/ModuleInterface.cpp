@@ -32,7 +32,7 @@ bool ModuleInterface::Start()
 	blackRect.x = 0;
 	blackRect.y = 278;
 	blackRect.w = SCREEN_WIDTH;
-	blackRect.h = 12;
+	blackRect.h = 50;
 	
 
 	return true;
@@ -97,7 +97,11 @@ update_status ModuleInterface::PostUpdate()
 }
 
 void ModuleInterface::DrawLifes() {
-	if (App->scene_intro->lifes == 2) 
+	if (App->scene_intro->lifes >= 3)
+	{
+		App->renderer->Blit(textures, 180, 220, &ballR);
+	}
+	if (App->scene_intro->lifes >= 2) 
 	{
 		App->renderer->Blit(textures, 180, 230,&ballR);
 	}
