@@ -57,13 +57,22 @@ public:
 	//Show GameOver
 	void ShowGameOver();
 
+	void DrawLifes();
+
+	SDL_Texture* textures;
+	SDL_Rect ballR;
 
 	//text
 	const char* text = { "SCORE" };
 	int score = 0;
+	int  highScore = 0;
+	int lastScore = 0;
 	int mainFont = -1;
 	int numberFont = -1;
 	SDL_Rect blackRect;
+	char scoreChar[DYNAMIC_TEXT_LEN + 1] = { "000000" };
+	char maxScoreChar[DYNAMIC_TEXT_LEN + 1] = { "000000" };
+	char lastScoreChar[DYNAMIC_TEXT_LEN + 1] = { "000000" };
 
 	//GameOver Window
 	bool showWindow = false;

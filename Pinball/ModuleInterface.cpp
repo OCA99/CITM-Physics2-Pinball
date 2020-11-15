@@ -24,6 +24,9 @@ bool ModuleInterface::Start()
 	mainFont = LoadFont("pinball/ClearFont.png", " ABCDEFGHIJKLMNOPQRSTUVWXYZ", 1);
 	numberFont = LoadFont("pinball/BlueFont.png", "0123456789", 1);
 
+	textures = App->textures->Load("pinball/sprites.png");
+	ballR = SDL_Rect({ 165, 95, 7, 7 });
+
 	// black rectangle
 	blackRect.x = 0;
 	blackRect.y = 278;
@@ -36,33 +39,75 @@ bool ModuleInterface::Start()
 
 update_status ModuleInterface::PostUpdate() 
 {
-	char scoreChar[DYNAMIC_TEXT_LEN + 1] = { "000000" };
-	if (score != 0) {
-	
+
+	DrawLifes();
+
+	if (!showWindow) 
+	{
 		IntToString(scoreChar, score);
 	}
+	
+	if (score >= highScore)
+	{
+		highScore = score;
+		IntToString(maxScoreChar, highScore);
+	}
+
+	IntToString(lastScoreChar, lastScore);
 
 	//black rectangle blit
 	App->renderer->DrawQuad(blackRect, 0, 0, 0, 255, true);
 
 	//text blit
-	BlitText(4, 278, mainFont, text);
-	BlitText(140, 278, numberFont, scoreChar);
+	BlitText(4, 279, mainFont, text);
+	BlitText(140, 279, numberFont, scoreChar);
+
+	BlitText(4, 291, mainFont, "HIGH SCORE");
+	BlitText(140, 291, numberFont, maxScoreChar);
+
+	BlitText(4, 303, mainFont, "LAST SCORE");
+	BlitText(140, 303, numberFont, lastScoreChar);
 
 	if (showWindow) {
+
 		curWinTime--;
 		if (curWinTime <= 0) {
 			showWindow = false;
 			App->scene_intro->lifes = 2;
+			lastScore = score;
+			score = 0;
 		}
+
+		App->renderer->DrawQuad(SDL_Rect({ 41,99,79,59 }), 0, 0, 0);
+		App->renderer->DrawQuad(SDL_Rect({ 42,100,77,57 }), 255, 255, 255);
 		App->renderer->DrawQuad(SDL_Rect({ 45,104,70,50 }), 0, 0, 0);
 		BlitText(55, 137, numberFont, scoreChar);
 		BlitText(59, 106, mainFont, "GAME");
-		BlitText(54, 122, mainFont, "OVER");
+		BlitText(59, 122, mainFont, "OVER");
+		
 	}
+
+	
+
 
 	return UPDATE_CONTINUE;
 
+}
+
+void ModuleInterface::DrawLifes() {
+	if (App->scene_intro->lifes == 2) {
+		App->renderer->Blit(textures, 180, 230,&ballR);
+		
+	}
+	if (App->scene_intro->lifes >= 1)
+	{
+		App->renderer->Blit(textures, 180, 240, &ballR);
+		
+	}
+	/*if (App->scene_intro->lifes >= 0) {
+
+		App->renderer->Blit(textures, 180, 240, &ballR);
+	}*/
 }
 
 void ModuleInterface::IntToString(char* buffer, int k) {
