@@ -545,7 +545,7 @@ PhysBody* ModulePhysics::CreateBall(int x, int y, float radius)
 	shape.m_radius = PIXEL_TO_METERS(radius);
 	b2FixtureDef fixture;
 	fixture.shape = &shape;
-	fixture.density = 5.5f;
+	fixture.density = 3.5f;
 	fixture.friction = 0.0f;
 	fixture.restitution = 0.0f;
 	fixture.filter.categoryBits = 0x0002;

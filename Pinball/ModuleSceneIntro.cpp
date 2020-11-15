@@ -30,7 +30,7 @@ bool ModuleSceneIntro::Start()
 
 
 
-	ballRect = SDL_Rect({165, 95, 7, 7 });
+	ballRect = SDL_Rect({165, 103, 8, 8 });
 	leftPikaRect = SDL_Rect({263, 117, 13, 14});
 	rightPikaRect = SDL_Rect({276, 117, 13, 14});
 	activeComboRect = SDL_Rect({ 191, 0, 6, 6 });
@@ -586,7 +586,7 @@ void ModuleSceneIntro::CreateWalls() {
 
 void ModuleSceneIntro::CreateBall()
 {
-	balls.add(App->physics->CreateBall(166, 260, 3.5f));
+	balls.add(App->physics->CreateBall(166, 260, 4.0f));
 	balls.getLast()->data->listener = this;
 	balls.getLast()->data->type = COLLIDER_TYPE::BALL;
 }
