@@ -90,6 +90,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB) {
 		if (bodyB->type == COLLIDER_TYPE::DEATH) {
 			waitingForBallReset = true;
 			ballWaitingForReset = bodyA;
+			CheckLife();
 		}
 
 		if (bodyB->type == COLLIDER_TYPE::PIKA) {
@@ -504,4 +505,17 @@ void ModuleSceneIntro::CreateBallInMousePos()
 	balls.add(App->physics->CreateBall(x, y, radius));
 	balls.getLast()->data->listener = this;
 	balls.getLast()->data->type = COLLIDER_TYPE::BALL;
+}
+
+void ModuleSceneIntro::CheckLife()
+{
+	if (lifes == 0) {
+		//Loose window...
+		App->ui->ShowGameOver();
+	}
+	else{ 
+		lifes--;
+		LOG("LIFES:%d", lifes);
+	}
+
 }

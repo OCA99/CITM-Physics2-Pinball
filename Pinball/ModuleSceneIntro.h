@@ -42,6 +42,8 @@ public:
 	PhysBody* pikaRightB;
 
 	float maxSpeed = 10.0f;
+	
+	int lifes = 2;
 
 	p2List<PhysBody*> balls;
 
@@ -54,6 +56,7 @@ public:
 	void CreateBall();
 	void ResetBall(PhysBody *ball);
 	void CreateBallInMousePos();
+	void CheckLife();
 
 public:
 

@@ -4,6 +4,7 @@
 #include "ModuleRender.h"
 #include "ModulePhysics.h"
 #include "math.h"
+#include "ModuleInterface.h"
 
 #ifdef _DEBUG
 #pragma comment( lib, "Box2D/libx86/Debug/Box2D.lib" )
@@ -40,15 +41,20 @@ bool ModulePhysics::Start()
 // 
 update_status ModulePhysics::PreUpdate()
 {
-	world->Step(1.0f / 60.0f, 6, 2);
-
-	for(b2Contact* c = world->GetContactList(); c; c = c->GetNext())
+	if (!App->ui->showWindow)
 	{
-		if(c->GetFixtureA()->IsSensor() && c->IsTouching())
+		world->Step(1.0f / 60.0f, 6, 2);
+	}
+
+
+
+	for (b2Contact* c = world->GetContactList(); c; c = c->GetNext())
+	{
+		if (c->GetFixtureA()->IsSensor() && c->IsTouching())
 		{
 			PhysBody* pb1 = (PhysBody*)c->GetFixtureA()->GetBody()->GetUserData();
 			PhysBody* pb2 = (PhysBody*)c->GetFixtureA()->GetBody()->GetUserData();
-			if(pb1 && pb2 && pb1->listener)
+			if (pb1 && pb2 && pb1->listener)
 				pb1->listener->OnCollision(pb1, pb2);
 		}
 	}
@@ -143,7 +149,7 @@ PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size)
 	b2ChainShape shape;
 	b2Vec2* p = new b2Vec2[size / 2];
 
-	for(uint i = 0; i < size / 2; ++i)
+	for (uint i = 0; i < size / 2; ++i)
 	{
 		p[i].x = PIXEL_TO_METERS(points[i * 2 + 0]) - PIXEL_TO_METERS(x);
 		p[i].y = PIXEL_TO_METERS(points[i * 2 + 1]) - PIXEL_TO_METERS(y);
@@ -203,84 +209,84 @@ PhysBody* ModulePhysics::CreateStaticChain(int x, int y, int* points, int size)
 // 
 update_status ModulePhysics::PostUpdate()
 {
-	if(App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
 		debug = !debug;
 
-	if(!debug)
+	if (!debug)
 		return UPDATE_CONTINUE;
 
 	// Bonus code: this will iterate all objects in the world and draw the circles
 	// You need to provide your own macro to translate meters to pixels
-	for(b2Body* b = world->GetBodyList(); b; b = b->GetNext())
+	for (b2Body* b = world->GetBodyList(); b; b = b->GetNext())
 	{
-		for(b2Fixture* f = b->GetFixtureList(); f; f = f->GetNext())
+		for (b2Fixture* f = b->GetFixtureList(); f; f = f->GetNext())
 		{
-			switch(f->GetType())
+			switch (f->GetType())
 			{
 				// Draw circles ------------------------------------------------
-				case b2Shape::e_circle:
+			case b2Shape::e_circle:
+			{
+				b2CircleShape* shape = (b2CircleShape*)f->GetShape();
+				b2Vec2 pos = f->GetBody()->GetPosition();
+				App->renderer->DrawCircle(METERS_TO_PIXELS(pos.x), METERS_TO_PIXELS(pos.y), METERS_TO_PIXELS(shape->m_radius), 255, 0, 0);
+			}
+			break;
+
+			// Draw polygons ------------------------------------------------
+			case b2Shape::e_polygon:
+			{
+				b2PolygonShape* polygonShape = (b2PolygonShape*)f->GetShape();
+				int32 count = polygonShape->GetVertexCount();
+				b2Vec2 prev, v;
+
+				for (int32 i = 0; i < count; ++i)
 				{
-					b2CircleShape* shape = (b2CircleShape*)f->GetShape();
-					b2Vec2 pos = f->GetBody()->GetPosition();
-					App->renderer->DrawCircle(METERS_TO_PIXELS(pos.x), METERS_TO_PIXELS(pos.y), METERS_TO_PIXELS(shape->m_radius), 255, 0, 0);
+					v = b->GetWorldPoint(polygonShape->GetVertex(i));
+					if (i > 0)
+						App->renderer->DrawLine(METERS_TO_PIXELS(prev.x), METERS_TO_PIXELS(prev.y), METERS_TO_PIXELS(v.x), METERS_TO_PIXELS(v.y), 255, 100, 100);
+
+					prev = v;
 				}
-				break;
 
-				// Draw polygons ------------------------------------------------
-				case b2Shape::e_polygon:
+				v = b->GetWorldPoint(polygonShape->GetVertex(0));
+				App->renderer->DrawLine(METERS_TO_PIXELS(prev.x), METERS_TO_PIXELS(prev.y), METERS_TO_PIXELS(v.x), METERS_TO_PIXELS(v.y), 255, 100, 100);
+			}
+			break;
+
+			// Draw chains contour -------------------------------------------
+			case b2Shape::e_chain:
+			{
+				b2ChainShape* shape = (b2ChainShape*)f->GetShape();
+				b2Vec2 prev, v;
+
+				for (int32 i = 0; i < shape->m_count; ++i)
 				{
-					b2PolygonShape* polygonShape = (b2PolygonShape*)f->GetShape();
-					int32 count = polygonShape->GetVertexCount();
-					b2Vec2 prev, v;
-
-					for(int32 i = 0; i < count; ++i)
+					v = b->GetWorldPoint(shape->m_vertices[i]);
+					if (i > 0)
 					{
-						v = b->GetWorldPoint(polygonShape->GetVertex(i));
-						if(i > 0)
-							App->renderer->DrawLine(METERS_TO_PIXELS(prev.x), METERS_TO_PIXELS(prev.y), METERS_TO_PIXELS(v.x), METERS_TO_PIXELS(v.y), 255, 100, 100);
-
-						prev = v;
+						int prevx = METERS_TO_PIXELS(prev.x);
+						int prevy = METERS_TO_PIXELS(prev.y);
+						App->renderer->DrawLine(prevx, prevy, METERS_TO_PIXELS(v.x), METERS_TO_PIXELS(v.y), 0, 255, 0, 255);
 					}
-
-					v = b->GetWorldPoint(polygonShape->GetVertex(0));
-					App->renderer->DrawLine(METERS_TO_PIXELS(prev.x), METERS_TO_PIXELS(prev.y), METERS_TO_PIXELS(v.x), METERS_TO_PIXELS(v.y), 255, 100, 100);
+					prev = v;
 				}
-				break;
 
-				// Draw chains contour -------------------------------------------
-				case b2Shape::e_chain:
-				{
-					b2ChainShape* shape = (b2ChainShape*)f->GetShape();
-					b2Vec2 prev, v;
+				v = b->GetWorldPoint(shape->m_vertices[0]);
+				App->renderer->DrawLine(METERS_TO_PIXELS(prev.x), METERS_TO_PIXELS(prev.y), METERS_TO_PIXELS(v.x), METERS_TO_PIXELS(v.y), 100, 255, 100);
+			}
+			break;
 
-					for(int32 i = 0; i < shape->m_count; ++i)
-					{
-						v = b->GetWorldPoint(shape->m_vertices[i]);
-						if (i > 0)
-						{
-							int prevx = METERS_TO_PIXELS(prev.x);
-							int prevy = METERS_TO_PIXELS(prev.y);
-							App->renderer->DrawLine(prevx, prevy, METERS_TO_PIXELS(v.x), METERS_TO_PIXELS(v.y), 0, 255, 0, 255);
-						}
-						prev = v;
-					}
+			// Draw a single segment(edge) ----------------------------------
+			case b2Shape::e_edge:
+			{
+				b2EdgeShape* shape = (b2EdgeShape*)f->GetShape();
+				b2Vec2 v1, v2;
 
-					v = b->GetWorldPoint(shape->m_vertices[0]);
-					App->renderer->DrawLine(METERS_TO_PIXELS(prev.x), METERS_TO_PIXELS(prev.y), METERS_TO_PIXELS(v.x), METERS_TO_PIXELS(v.y), 100, 255, 100);
-				}
-				break;
-
-				// Draw a single segment(edge) ----------------------------------
-				case b2Shape::e_edge:
-				{
-					b2EdgeShape* shape = (b2EdgeShape*)f->GetShape();
-					b2Vec2 v1, v2;
-
-					v1 = b->GetWorldPoint(shape->m_vertex0);
-					v1 = b->GetWorldPoint(shape->m_vertex1);
-					App->renderer->DrawLine(METERS_TO_PIXELS(v1.x), METERS_TO_PIXELS(v1.y), METERS_TO_PIXELS(v2.x), METERS_TO_PIXELS(v2.y), 100, 100, 255);
-				}
-				break;
+				v1 = b->GetWorldPoint(shape->m_vertex0);
+				v1 = b->GetWorldPoint(shape->m_vertex1);
+				App->renderer->DrawLine(METERS_TO_PIXELS(v1.x), METERS_TO_PIXELS(v1.y), METERS_TO_PIXELS(v2.x), METERS_TO_PIXELS(v2.y), 100, 100, 255);
+			}
+			break;
 			}
 
 			// TODO 1: If mouse button 1 is pressed ...
@@ -315,7 +321,7 @@ bool ModulePhysics::CleanUp()
 	return true;
 }
 
-void PhysBody::GetPosition(int& x, int &y) const
+void PhysBody::GetPosition(int& x, int& y) const
 {
 	b2Vec2 pos = body->GetPosition();
 	x = METERS_TO_PIXELS(pos.x) - (width);
@@ -333,9 +339,9 @@ bool PhysBody::Contains(int x, int y) const
 
 	const b2Fixture* fixture = body->GetFixtureList();
 
-	while(fixture != NULL)
+	while (fixture != NULL)
 	{
-		if(fixture->GetShape()->TestPoint(body->GetTransform(), p) == true)
+		if (fixture->GetShape()->TestPoint(body->GetTransform(), p) == true)
 			return true;
 		fixture = fixture->GetNext();
 	}
@@ -356,15 +362,15 @@ int PhysBody::RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& no
 
 	const b2Fixture* fixture = body->GetFixtureList();
 
-	while(fixture != NULL)
+	while (fixture != NULL)
 	{
-		if(fixture->GetShape()->RayCast(&output, input, body->GetTransform(), 0) == true)
+		if (fixture->GetShape()->RayCast(&output, input, body->GetTransform(), 0) == true)
 		{
 			// do we want the normal ?
 
 			float fx = x2 - x1;
 			float fy = y2 - y1;
-			float dist = sqrtf((fx*fx) + (fy*fy));
+			float dist = sqrtf((fx * fx) + (fy * fy));
 
 			normal_x = output.normal.x;
 			normal_y = output.normal.y;
@@ -382,10 +388,10 @@ void ModulePhysics::BeginContact(b2Contact* contact)
 	PhysBody* physA = (PhysBody*)contact->GetFixtureA()->GetBody()->GetUserData();
 	PhysBody* physB = (PhysBody*)contact->GetFixtureB()->GetBody()->GetUserData();
 
-	if(physA && physA->listener != NULL)
+	if (physA && physA->listener != NULL)
 		physA->listener->OnCollision(physA, physB);
 
-	if(physB && physB->listener != NULL)
+	if (physB && physB->listener != NULL)
 		physB->listener->OnCollision(physB, physA);
 }
 
@@ -535,7 +541,7 @@ PhysBody* ModulePhysics::CreateBall(int x, int y, float radius)
 {
 	b2BodyDef body;
 	body.type = b2_dynamicBody;
-	body.position.Set(PIXEL_TO_METERS(x) , PIXEL_TO_METERS(y));
+	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
 	body.bullet = true;
 
 	b2Body* b = world->CreateBody(&body);

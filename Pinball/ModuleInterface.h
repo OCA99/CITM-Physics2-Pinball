@@ -54,6 +54,9 @@ public:
 	// Create a surface from text
 	void BlitText(int x, int y, int fontIndex, const char* text) const;
 
+	//Show GameOver
+	void ShowGameOver();
+
 
 	//text
 	const char* text = { "SCORE" };
@@ -61,6 +64,11 @@ public:
 	int mainFont = -1;
 	int numberFont = -1;
 	SDL_Rect blackRect;
+
+	//GameOver Window
+	bool showWindow = false;
+	int windowTime = 350;
+	int curWinTime = 0;
 
 private:
 	// An array to keep track and store all loaded fonts

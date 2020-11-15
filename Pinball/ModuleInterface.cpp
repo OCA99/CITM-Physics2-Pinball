@@ -4,6 +4,7 @@
 #include "ModuleTextures.h"
 #include "ModuleRender.h"
 #include "ModuleInterface.h"
+#include "ModuleSceneIntro.h"
 
 #include<string.h>
 
@@ -47,6 +48,18 @@ update_status ModuleInterface::PostUpdate()
 	//text blit
 	BlitText(4, 278, mainFont, text);
 	BlitText(140, 278, numberFont, scoreChar);
+
+	if (showWindow) {
+		curWinTime--;
+		if (curWinTime <= 0) {
+			showWindow = false;
+			App->scene_intro->lifes = 2;
+		}
+		App->renderer->DrawQuad(SDL_Rect({ 45,104,70,50 }), 0, 0, 0);
+		BlitText(55, 137, numberFont, scoreChar);
+		BlitText(59, 106, mainFont, "GAME");
+		BlitText(54, 122, mainFont, "OVER");
+	}
 
 	return UPDATE_CONTINUE;
 
@@ -174,4 +187,10 @@ void ModuleInterface::BlitText(int x, int y, int font_id, const char* text) cons
 		// Advance the position where we blit the next character
 		x += spriteRect.w;
 	}
+}
+
+void ModuleInterface::ShowGameOver()
+{
+	showWindow = true;
+	curWinTime = windowTime;
 }
