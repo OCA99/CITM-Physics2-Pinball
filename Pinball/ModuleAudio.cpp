@@ -53,6 +53,7 @@ bool ModuleAudio::Start()
 	App->audio->LoadFx("audio/sound_fx/Diglet.ogg");//6 fet
 	App->audio->LoadFx("audio/sound_fx/Triangle.ogg");//7 fet
 	App->audio->LoadFx("audio/sound_fx/Pika.ogg");//8 fet
+	App->audio->LoadFx("audio/sound_fx/Hole.ogg");//9 fet
 
 
 	return ret;

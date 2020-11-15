@@ -70,6 +70,7 @@ public:
 	void BallToFlower(PhysBody* ball);
 	void CreateBallInMousePos();
 	void CheckLife();
+	void ResetCombos();
 
 public:
 

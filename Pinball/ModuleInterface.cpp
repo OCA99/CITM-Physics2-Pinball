@@ -78,6 +78,7 @@ update_status ModuleInterface::PostUpdate()
 			App->scene_intro->lifes = 2;
 			lastScore = score;
 			score = 0;
+			App->scene_intro->ResetCombos();
 		}
 
 		App->renderer->DrawQuad(SDL_Rect({ 41,99,79,59 }), 0, 0, 0);

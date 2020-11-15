@@ -660,3 +660,10 @@ void ModuleSceneIntro::CheckLife()
 	}
 
 }
+
+void ModuleSceneIntro::ResetCombos()
+{
+	comb1active = false;
+	comb2active = false;
+	comb3active = false;
+}
