@@ -30,16 +30,23 @@ bool ModuleSceneIntro::Start()
 
 
 
-	ballRect = SDL_Rect({165, 103, 8, 8 });
+	ballRect = SDL_Rect({165, 103, 7, 7 });
 	leftPikaRect = SDL_Rect({263, 117, 13, 14});
 	rightPikaRect = SDL_Rect({276, 117, 13, 14});
 	activeComboRect = SDL_Rect({ 191, 0, 6, 6 });
+	starRect = SDL_Rect({ 119, 88, 21, 22 });
 
 	pikaAnimation.PushBack(SDL_Rect({ 84, 270, 16, 16 }));
 	pikaAnimation.PushBack(SDL_Rect({ 100, 270, 16, 16 }));
 	pikaAnimation.PushBack(SDL_Rect({ 116, 270, 16, 16 }));
 	pikaAnimation.loop = false;
 	pikaAnimation.speed = 0.3f;
+
+	flowerAnim.PushBack(SDL_Rect({ 220, 35, 29, 37 }));
+	flowerAnim.PushBack(SDL_Rect({ 249, 35, 29, 37 }));
+	flowerAnim.PushBack(SDL_Rect({ 278, 35, 29, 37 }));
+	flowerAnim.PushBack(SDL_Rect({ 307, 35, 29, 37 }));
+	flowerAnim.speed = 0.05f;
 
 	CreateWalls();
 	CreateBall();
@@ -68,6 +75,11 @@ update_status ModuleSceneIntro::Update()
 	if (waitingForBallReset) {
 		waitingForBallReset = false;
 		ResetBall(ballWaitingForReset);
+	}
+
+	if (ballToFlower) {
+		ballToFlower = false;
+		BallToFlower(ballWaitingForFlower);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
@@ -174,6 +186,11 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB) {
 				comb1active = comb2active = comb3active = false;
 			}
 		}
+
+		if (bodyB->type == COLLIDER_TYPE::HOLE) {
+			ballToFlower = true;
+			ballWaitingForFlower = bodyA;
+		}
 	}
 	
 }
@@ -182,6 +199,17 @@ update_status ModuleSceneIntro::PostUpdate()
 {
 	App->renderer->Blit(background, 0, 0);
 	
+	if (comb1active) {
+		App->renderer->Blit(objectsTexture, 55, 58, &activeComboRect);
+	}
+	if (comb2active) {
+		App->renderer->Blit(objectsTexture, 77, 47, &activeComboRect);
+	}
+	if (comb3active) {
+		App->renderer->Blit(objectsTexture, 99, 48, &activeComboRect);
+	}
+
+	App->renderer->Blit(objectsTexture, 45, 105, &starRect);
 
 	//Render each ball Texture
 	p2List_item<PhysBody*>* ball_single = balls.getFirst();
@@ -199,15 +227,8 @@ update_status ModuleSceneIntro::PostUpdate()
 	App->renderer->Blit(objectsTexture, 139, 247, &rightPikaRect);
 	App->renderer->Blit(objectsTexture, 160, 262, &pikaAnimation.GetCurrentFrame());
 
-	if (comb1active) {
-		App->renderer->Blit(objectsTexture, 55, 58, &activeComboRect);
-	}
-	if (comb2active) {
-		App->renderer->Blit(objectsTexture, 77, 47, &activeComboRect);
-	}
-	if (comb3active) {
-		App->renderer->Blit(objectsTexture, 99, 48, &activeComboRect);
-	}
+	flowerAnim.Step();
+	App->renderer->Blit(objectsTexture, 104, 74, &flowerAnim.GetCurrentFrame());
 
 	return UPDATE_CONTINUE;
 }
@@ -582,11 +603,14 @@ void ModuleSceneIntro::CreateWalls() {
 
 	PhysBody* combo3 = App->physics->CreateRectangleSensor(102, 53, 16, 8);
 	combo3->type = COLLIDER_TYPE::COMBO3;
+
+	PhysBody* hole = App->physics->CreateRectangleSensor(18, 19, 16, 3);
+	hole->type = COLLIDER_TYPE::HOLE;
 }
 
 void ModuleSceneIntro::CreateBall()
 {
-	balls.add(App->physics->CreateBall(166, 260, 4.0f));
+	balls.add(App->physics->CreateBall(166, 260, 3.5f));
 	balls.getLast()->data->listener = this;
 	balls.getLast()->data->type = COLLIDER_TYPE::BALL;
 }
@@ -597,6 +621,15 @@ void ModuleSceneIntro::ResetBall(PhysBody *ball)
 	ballpos.x = PIXEL_TO_METERS(166.0f);
 	ballpos.y = PIXEL_TO_METERS(260.0f);
 	ball->body->SetTransform(ballpos,0.0f);
+	ball->body->SetLinearVelocity(b2Vec2(0, 0));
+}
+
+void ModuleSceneIntro::BallToFlower(PhysBody* ball)
+{
+	b2Vec2 ballpos;
+	ballpos.x = PIXEL_TO_METERS(120.0f);
+	ballpos.y = PIXEL_TO_METERS(83.0f);
+	ball->body->SetTransform(ballpos, 0.0f);
 	ball->body->SetLinearVelocity(b2Vec2(0, 0));
 }
 

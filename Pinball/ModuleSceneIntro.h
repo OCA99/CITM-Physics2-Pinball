@@ -24,6 +24,9 @@ public:
 	SDL_Rect leftPikaRect;
 	SDL_Rect rightPikaRect;
 	SDL_Rect activeComboRect;
+	SDL_Rect starRect;
+
+	Animation flowerAnim;
 
 	//physbodies
 
@@ -64,6 +67,7 @@ public:
 	void CreateWalls();
 	void CreateBall();
 	void ResetBall(PhysBody *ball);
+	void BallToFlower(PhysBody* ball);
 	void CreateBallInMousePos();
 	void CheckLife();
 
@@ -73,6 +77,8 @@ public:
 private:
 	bool waitingForBallReset = false;
 	PhysBody* ballWaitingForReset = nullptr;
+	bool ballToFlower = false;
+	PhysBody* ballWaitingForFlower = nullptr;
 
 	bool comb1active = false;
 	bool comb2active = false;

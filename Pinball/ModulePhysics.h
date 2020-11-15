@@ -23,7 +23,8 @@ enum COLLIDER_TYPE {
 	TRIANGLE,
 	COMBO1,
 	COMBO2,
-	COMBO3
+	COMBO3,
+	HOLE
 };
 
 class PhysBody
