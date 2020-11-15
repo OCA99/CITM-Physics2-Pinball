@@ -36,7 +36,7 @@ public:
 		frames[last_frame++] = rect;
 	}
 
-	SDL_Rect& GetCurrentFrame()
+	void Step()
 	{
 		switch (sense)
 		{
@@ -63,7 +63,10 @@ public:
 		}
 		break;
 		}
+	}
 
+	SDL_Rect& GetCurrentFrame()
+	{
 		return frames[(int)current_frame];
 	}
 

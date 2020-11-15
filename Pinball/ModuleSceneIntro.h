@@ -3,6 +3,7 @@
 #include "p2List.h"
 #include "p2Point.h"
 #include "Globals.h"
+#include "Animation.h"
 
 class PhysBody;
 
@@ -12,11 +13,13 @@ public:
 	ModuleSceneIntro(Application* app, bool start_enabled = true);
 	~ModuleSceneIntro();
 	SDL_Texture* background;
-	SDL_Texture* ballTexture;
+	SDL_Texture* objectsTexture;
 
 
 	SDL_Rect backRect;
 	SDL_Rect ballRect;
+	SDL_Rect leftPikaRect;
+	SDL_Rect rightPikaRect;
 
 	//physbodies
 
@@ -40,6 +43,8 @@ public:
 
 	PhysBody* pikaLeftB;
 	PhysBody* pikaRightB;
+
+	Animation pikaAnimation;
 
 	float maxSpeed = 10.0f;
 	

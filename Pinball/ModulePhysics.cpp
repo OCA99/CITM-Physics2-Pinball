@@ -570,7 +570,7 @@ PhysBody* ModulePhysics::CreatePlunge()
 {
 	b2BodyDef bodyA;
 	bodyA.type = b2_dynamicBody;
-	bodyA.position.Set(PIXEL_TO_METERS(167), PIXEL_TO_METERS(270));
+	bodyA.position.Set(PIXEL_TO_METERS(167), PIXEL_TO_METERS(265));
 
 	b2Body* b1 = world->CreateBody(&bodyA);
 	b2PolygonShape box;
@@ -587,7 +587,7 @@ PhysBody* ModulePhysics::CreatePlunge()
 
 	b2BodyDef bodyB;
 	bodyB.type = b2_staticBody;
-	bodyB.position.Set(PIXEL_TO_METERS(167), PIXEL_TO_METERS(282));
+	bodyB.position.Set(PIXEL_TO_METERS(167), PIXEL_TO_METERS(277));
 
 	b2Body* b2 = world->CreateBody(&bodyB);
 	b2PolygonShape box1;

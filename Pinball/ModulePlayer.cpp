@@ -3,6 +3,7 @@
 #include "ModulePlayer.h"
 #include "ModuleRender.h"
 #include "ModuleInput.h"
+#include "ModuleSceneIntro.h"
 
 ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -55,7 +56,15 @@ update_status ModulePlayer::PreUpdate()
 		rightFlipperBody->body->ApplyTorque(-15.0f, true);
 
 	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+	{
 		plunge->body->ApplyForceToCenter(b2Vec2(0, 250), true);
+		App->scene_intro->pikaAnimation.Step();
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_UP)
+	{
+		App->scene_intro->pikaAnimation.Reset();
+	}
 
 
 	return UPDATE_CONTINUE;

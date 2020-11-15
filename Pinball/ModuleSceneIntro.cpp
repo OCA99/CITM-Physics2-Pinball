@@ -26,11 +26,20 @@ bool ModuleSceneIntro::Start()
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
 	background = App->textures->Load("pinball/level.png");
-	ballTexture = App->textures->Load("pinball/sprites.png");
+	objectsTexture = App->textures->Load("pinball/sprites.png");
 
 
 
 	ballRect = SDL_Rect({165, 95, 7, 7 });
+	leftPikaRect = SDL_Rect({263, 117, 13, 14});
+	rightPikaRect = SDL_Rect({276, 117, 13, 14});
+
+	pikaAnimation.PushBack(SDL_Rect({ 84, 270, 16, 16 }));
+	pikaAnimation.PushBack(SDL_Rect({ 100, 270, 16, 16 }));
+	pikaAnimation.PushBack(SDL_Rect({ 116, 270, 16, 16 }));
+	pikaAnimation.loop = false;
+	pikaAnimation.speed = 0.3f;
+
 	CreateWalls();
 	CreateBall();
 	
@@ -73,6 +82,8 @@ update_status ModuleSceneIntro::Update()
 		ball_single = ball_single->next;
 	}
 
+
+
 	return UPDATE_CONTINUE;
 }
 
@@ -111,10 +122,14 @@ update_status ModuleSceneIntro::PostUpdate()
 		int x, y;
 		ball_single->data->GetPosition(x, y);
 
-		App->renderer->Blit(ballTexture, x, y, &ballRect);
+		App->renderer->Blit(objectsTexture, x, y, &ballRect);
 
 		ball_single = ball_single->next;
 	}
+
+	App->renderer->Blit(objectsTexture, 8, 247, &leftPikaRect);
+	App->renderer->Blit(objectsTexture, 139, 247, &rightPikaRect);
+	App->renderer->Blit(objectsTexture, 160, 262, &pikaAnimation.GetCurrentFrame());
 
 	return UPDATE_CONTINUE;
 }
@@ -479,7 +494,7 @@ void ModuleSceneIntro::CreateWalls() {
 
 void ModuleSceneIntro::CreateBall()
 {
-	balls.add(App->physics->CreateBall(167, 265, 3.5f));
+	balls.add(App->physics->CreateBall(166, 260, 3.5f));
 	balls.getLast()->data->listener = this;
 	balls.getLast()->data->type = COLLIDER_TYPE::BALL;
 }
@@ -487,8 +502,8 @@ void ModuleSceneIntro::CreateBall()
 void ModuleSceneIntro::ResetBall(PhysBody *ball)
 {
 	b2Vec2 ballpos;
-	ballpos.x = PIXEL_TO_METERS(167.0f);
-	ballpos.y = PIXEL_TO_METERS(265.0f);
+	ballpos.x = PIXEL_TO_METERS(166.0f);
+	ballpos.y = PIXEL_TO_METERS(260.0f);
 	ball->body->SetTransform(ballpos,0.0f);
 	ball->body->SetLinearVelocity(b2Vec2(0, 0));
 }
