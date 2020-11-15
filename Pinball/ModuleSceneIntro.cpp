@@ -191,6 +191,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB) {
 			ballToFlower = true;
 			ballWaitingForFlower = bodyA;
 			App->audio->PlayFx(9, 0);
+			App->ui->score += 110;
 		}
 	}
 	
