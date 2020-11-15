@@ -79,6 +79,6 @@ public:
 private:
 
 	bool debug = false;
-	b2MouseJoint* mouse_joint;
+	b2MouseJoint* mouseJoint;
 	b2Body* ground;
 };
