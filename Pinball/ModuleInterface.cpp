@@ -5,6 +5,7 @@
 #include "ModuleRender.h"
 #include "ModuleInterface.h"
 #include "ModuleSceneIntro.h"
+#include "ModuleAudio.h"
 
 #include<string.h>
 
@@ -72,6 +73,7 @@ update_status ModuleInterface::PostUpdate()
 
 		curWinTime--;
 		if (curWinTime <= 0) {
+
 			showWindow = false;
 			App->scene_intro->lifes = 2;
 			lastScore = score;
@@ -233,4 +235,5 @@ void ModuleInterface::ShowGameOver()
 {
 	showWindow = true;
 	curWinTime = windowTime;
+	App->audio->PlayFx(3, 0);
 }

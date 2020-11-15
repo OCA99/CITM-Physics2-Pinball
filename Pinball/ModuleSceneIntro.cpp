@@ -105,6 +105,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB) {
 			waitingForBallReset = true;
 			ballWaitingForReset = bodyA;
 			CheckLife();
+			App->audio->PlayFx(2, 0);
 		}
 
 		if (bodyB->type == COLLIDER_TYPE::PIKA) {
