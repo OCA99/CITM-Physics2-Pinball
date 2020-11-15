@@ -46,6 +46,9 @@ bool ModuleSceneIntro::Start()
 	deathSensor = App->physics->CreateRectangleSensor(192/2, 290, 192, 14);
 	deathSensor->type = COLLIDER_TYPE::DEATH;
 
+	mainSong = App->audio->LoadFx("audio/music/Main_Theme.ogg");
+	App->audio->PlayFx(mainSong,1);
+
 	return ret;
 }
 

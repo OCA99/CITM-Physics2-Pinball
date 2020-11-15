@@ -12,6 +12,9 @@ class ModuleSceneIntro : public Module
 public:
 	ModuleSceneIntro(Application* app, bool start_enabled = true);
 	~ModuleSceneIntro();
+
+	int mainSong = -1;
+
 	SDL_Texture* background;
 	SDL_Texture* objectsTexture;
 

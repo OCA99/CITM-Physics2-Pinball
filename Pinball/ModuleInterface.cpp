@@ -95,19 +95,14 @@ update_status ModuleInterface::PostUpdate()
 }
 
 void ModuleInterface::DrawLifes() {
-	if (App->scene_intro->lifes == 2) {
+	if (App->scene_intro->lifes == 2) 
+	{
 		App->renderer->Blit(textures, 180, 230,&ballR);
-		
 	}
 	if (App->scene_intro->lifes >= 1)
 	{
 		App->renderer->Blit(textures, 180, 240, &ballR);
-		
 	}
-	/*if (App->scene_intro->lifes >= 0) {
-
-		App->renderer->Blit(textures, 180, 240, &ballR);
-	}*/
 }
 
 void ModuleInterface::IntToString(char* buffer, int k) {
