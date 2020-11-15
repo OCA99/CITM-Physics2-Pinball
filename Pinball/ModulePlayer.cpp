@@ -4,6 +4,7 @@
 #include "ModuleRender.h"
 #include "ModuleInput.h"
 #include "ModuleSceneIntro.h"
+#include "ModuleInterface.h"
 
 ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -45,6 +46,8 @@ bool ModulePlayer::CleanUp()
 
 update_status ModulePlayer::PreUpdate()
 {
+	if (App->ui->showWindow)
+		return UPDATE_CONTINUE;
 	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
 		leftFlipperBody->body->ApplyTorque(-20.0f, true);
 	else
