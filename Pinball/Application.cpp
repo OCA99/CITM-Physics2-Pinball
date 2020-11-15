@@ -83,6 +83,9 @@ bool Application::Init()
 update_status Application::Update()
 {
 	update_status ret = UPDATE_CONTINUE;
+
+	frameStart = SDL_GetTicks();
+
 	p2List_item<Module*>* item = list_modules.getFirst();
 
 	while(item != NULL && ret == UPDATE_CONTINUE)
@@ -108,6 +111,13 @@ update_status Application::Update()
 		if(item->data->IsEnabled())
 			ret = item->data->PostUpdate();
 		item = item->next;
+	}
+
+	frameTime = SDL_GetTicks() - frameStart;
+
+	if (frameTime < frameDelay) {
+		SDL_Delay(frameDelay - frameTime);
+		LOG("delay");
 	}
 
 	return ret;

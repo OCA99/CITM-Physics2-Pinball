@@ -31,6 +31,12 @@ private:
 
 	p2List<Module*> list_modules;
 
+	const int FPS = 60;
+	const float frameDelay = 1000 / FPS;
+
+	long long int frameStart;
+	int frameTime;
+
 public:
 
 	Application();
