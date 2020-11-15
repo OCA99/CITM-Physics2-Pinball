@@ -190,6 +190,8 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB) {
 		if (bodyB->type == COLLIDER_TYPE::HOLE) {
 			ballToFlower = true;
 			ballWaitingForFlower = bodyA;
+			App->audio->PlayFx(9, 0);
+			App->ui->score += 110;
 		}
 	}
 	
