@@ -5,6 +5,7 @@
 #include "ModuleInput.h"
 #include "ModuleSceneIntro.h"
 #include "ModuleInterface.h"
+#include "ModuleAudio.h"
 
 ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -66,6 +67,7 @@ update_status ModulePlayer::PreUpdate()
 
 	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_UP)
 	{
+		App->audio->PlayFx(4, 0);
 		App->scene_intro->pikaAnimation.Reset();
 	}
 

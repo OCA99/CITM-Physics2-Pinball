@@ -14,7 +14,7 @@ ModuleAudio::~ModuleAudio()
 {}
 
 // Called before render is available
-bool ModuleAudio::Init()
+bool ModuleAudio::Start()
 {
 	LOG("Loading Audio Mixer");
 	bool ret = true;
@@ -43,6 +43,15 @@ bool ModuleAudio::Init()
 		LOG("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
 		ret = true;
 	}
+
+	//Load all Fx Sounds
+	App->audio->LoadFx("audio/sound_fx/Combo.ogg");//1 fet
+	App->audio->LoadFx("audio/sound_fx/Dead.ogg");//2 fet
+	App->audio->LoadFx("audio/sound_fx/Lose.ogg");//3 fet
+	App->audio->LoadFx("audio/sound_fx/Pika.ogg");//4 fet
+	App->audio->LoadFx("audio/sound_fx/StartGame.ogg");//5 fet
+
+
 
 	return ret;
 }

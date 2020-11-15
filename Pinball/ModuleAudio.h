@@ -13,7 +13,7 @@ public:
 	ModuleAudio(Application* app, bool start_enabled = true);
 	~ModuleAudio();
 
-	bool Init();
+	bool Start();
 	bool CleanUp();
 
 	// Play a music file
